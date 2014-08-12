@@ -24,13 +24,13 @@ class Stats extends Index
 		self::Graph('graph-ratio-vm','col-md-4',200);
 		echo "</div>";
 		echo "<div class='row-fluid'>";
-		self::Label('vm_left','warning','Nombre de VM possible','col-md-4');
-		self::Label('vm_total','success','Nombre de VM','col-md-4');
+		self::Label('vm_left','success','Nombre de VM possible','col-md-4');
+		self::Label('vm_total','warning','Nombre de VM','col-md-4');
 		self::Label('hosts_total','primary','Nombre d\'hyperviseurs','col-md-4');
 		echo "</div>";			
 		echo "<div class='row-fluid'>";
-		self::Label2('vm_cpu_average','info','CPU moyen','col-md-2');
-		self::Label2('vm_mem_average','info','RAM moyenne','col-md-2');	
+		self::Label2('vm_cpu_average','success','CPU moyen','col-md-2');
+		self::Label2('vm_mem_average','success','RAM moyenne','col-md-2');	
 		self::Label2('','','','col-md-4');	
 		self::Label2('cluster_failover_cpu','info','HA CPU','col-md-2');
 		self::Label2('cluster_failover_mem','info','HA Memoire','col-md-2');			
@@ -47,7 +47,7 @@ class Stats extends Index
 		echo "</div>";	
 		echo "<div class='row-fluid'>";
 		$SQL='SELECT moref,hostname,vm_num,datastore_free,datastore_used
-			FROM data_hosts WHERE cluster="'.$title.'" order by '.$order.' '.$desc;
+			FROM Hosts WHERE cluster="'.$title.'" order by '.$order.' '.$desc;
 		$this->Resulats = $this->query($SQL);
 		$this->classtype = "cluster-stats";
 		self::Tableau();
