@@ -5,13 +5,14 @@ class MainPage  extends Header
 	private $menu;
 	private $menubar;
 	private $general;
+	private $about;
 	
 	
 	function __construct(){
-		/// Menu
-		$this->menu			=	new Menu();
 		/// MenuBar
 		$this->menubar 		= 	new Menubar();
+		// About Kapaseety
+		$this->about = new About();
 		/// Footer
 		$this->footer		= new Footer();
 		
@@ -21,22 +22,19 @@ class MainPage  extends Header
 		$this->header();
 		
 		echo '<body>';
+
+		echo '<div id="wrapper">';
 		$this->menubar->toHTML();
-		echo '<div class="container-fluid">';
+		  echo '<div id="page-wrapper">';
 			echo '<div class="row">';
-				echo '<div class="col-md-2">';
-					$this->menu->toHTML();
-				echo '</div>';
-				echo '<div id="content" class="col-md-10">';
-					$this->stats	= new Stats();
-					$this->stats->DataCentDetail('Les clusters');
-					//~ $this->stats->ClusDetail('PRODUCTION_01');
-					//~ $this->stats->HostDetail('zlv7300i');
-					//~ $this->form	= new Form();
-					//~ $this->form->toHTML();			
+				echo '<div id="content" class="col-lg-12" >';
+					$dashboard = new Dashboard();
+					$dashboard->toHTML();		
 				echo '</div>';		
 			echo '</div>';
+		  echo '</div>';
 		echo '</div>';
+		$this->about->toHTML();
 		$this->footer->scripts();
 		echo'</body>';
 	}

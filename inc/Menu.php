@@ -16,65 +16,66 @@ class Menu implements HTMLObject
 	}
 	
 	function toHTML() {
-		echo '
-			<div class="panel-group" id="accordion">
-			  <div class="panel panel-default">
-			    <div class="panel-heading">
-			      <h4 class="panel-title">
-				<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
-				  Les Clusters
-				</a>
-			      </h4>
-			    </div>
-			    <div id="collapseOne" class="panel-collapse collapse in datacenter-stats">
-			      <div class="panel-body">
-			      <ul class="nav nav-pills nav-stacked">';
-					$SQL='select distinct clustername,cluster_moref from Clusters';
+				
+		
+	echo '<div class="navbar-default sidebar" role="navigation">
+                <div class="sidebar-nav navbar-collapse">
+                    <ul class="nav" id="side-menu">
+                        <li class="sidebar-search">
+                            <div class="input-group custom-search-form">
+                                <input id="search" type="text" class="form-control" placeholder="Search...">
+                                <span class="input-group-btn">
+                                <button id="search-btn" class="btn btn-default" type="button">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                            </div>
+                            <!-- /input-group -->
+                        </li>
+                        <li>
+                            <a  class="item" href="#" data-moref="" data-href="dashboard"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-sitemap fa-fw"></i> Clusters<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">';
+					$SQL='select distinct clustername,cluster_moref from clusters';
 					$this->Resulats = $this->query($SQL);
 					foreach ($this->Resulats as $value)  {
-						echo "<li><a href='javascript:void();' data-moref='".$value['cluster_moref']."' data-href='".$value['clustername']."'>".$value['clustername']."</li>";
+					echo "<li><a class='item' href='#' data-moref='".$value['cluster_moref']."' data-href='cluster'>".$value['clustername']."</a>";
 					}
-
-		echo'     </ul>
-			      </div>
-			    </div>
-			  </div>
-			  <div class="panel panel-default">
-			    <div class="panel-heading">
-			      <h4 class="panel-title">
-				<a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
-				  Les Hyperviseurs
-				</a>
-			      </h4>
-			    </div>
-			    <div id="collapseTwo" class="panel-collapse collapse cluster-stats">
-			      <div class="panel-body">
-			      <ul class="nav nav-pills nav-stacked">';
-					$SQL='select distinct hostname,moref from Hosts';
+                      echo '</ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-building fa-fw"></i> Hosts<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">';
+					$SQL='select distinct clustername,cluster_moref from clusters';
 					$this->Resulats = $this->query($SQL);
 					foreach ($this->Resulats as $value)  {
-						echo "<li><a href='javascript:void();' data-moref='".$value['moref']."' data-href='".$value['hostname']."'>".$value['hostname']."</li>";
+						echo "<li><a href='#'>".$value['clustername']."</a>";
+						$SQLHosts='select distinct hostname,moref from hosts';
+						$this->ResulatsHosts = $this->query($SQLHosts);
+							echo '<ul class="nav nav-third-level">';
+							foreach ($this->ResulatsHosts as $value)  {
+								echo "<li><a class='item' href='#' data-moref='".$value['moref']."' data-href='host'>".$value['hostname']."</a>";
+							}
+							echo '</ul>';
+						echo "</li>";
 					}
-
-		echo'     </ul>			      
-			      </div>
-			    </div>
-			  </div>
-			  <div class="panel panel-default">
-			    <div class="panel-heading">
-			      <h4 class="panel-title">
-				<a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
-				  Les Datastores
-				</a>
-			      </h4>
-			    </div>
-			    <div id="collapseThree" class="panel-collapse collapse">
-			      <div class="panel-body">
-			      </div>
-			    </div>
-			  </div>
-		</div>
-		';
+			 echo '</ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-database fa-fw"></i> Datastores<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+				<li><a class="item" href="" data-moref="datastore-1" data-href="datastore">Datastore 1</a>
+			    </ul>
+			</li>
+                    </ul>
+                </div>
+                <!-- /.sidebar-collapse -->
+            </div>
+            <!-- /.navbar-static-side -->';
 	}
 }
 

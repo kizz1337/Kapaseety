@@ -1,20 +1,17 @@
 <?php
 
-class SGBD
-
-{
+class SGBD {
 
 private 
       $Lien        = '',
-      $Debug     = true,
       $NbRequetes  = 0;
 	
 	function __construct(){
 	      $this->Lien=mysql_connect(Settings::$sgbd_server, Settings::$sgbd_user,  Settings::$sgbd_password);
-	      if(!$this->Lien && $this->Debug)
+	      if(!$this->Lien)
 		throw new exception('Erreur de connexion au serveur MySql!!!');
 	      $Base = mysql_select_db(Settings::$sgbd_database,$this->Lien);
-	      if (!$Base && $this->Debug)
+	      if (!$Base)
 		throw new exception('Erreur de connexion à la base de donnees!!!');
 	}
 	
@@ -35,7 +32,8 @@ private
 		$i = 0;
 		$Ressource = mysql_query($Requete,$this->Lien);
 		$TabResultat=array();
-		if (!$Ressource and $this->Debug) throw new exception('Erreur de requête SQL!!!');
+		//~ if ($debug) {print_r($Requete);}
+		if (!$Ressource) throw new exception('Erreur de requête SQL!!!');
 		while ($Ligne = mysql_fetch_assoc($Ressource))
 		{
 			foreach ($Ligne as $clef => $valeur) $TabResultat[$i][$clef] = $valeur;
@@ -56,7 +54,7 @@ private
 		$i = 0;
 		$Ressource = mysql_query($Requete,$this->Lien);
 		//~ print_r(json_encode(mysql_fetch_assoc($Ressource)));
-		if (!$Ressource and $this->Debug) throw new exception('Erreur de requête SQL!!!');
+		if (!$Ressource) throw new exception('Erreur de requête SQL!!!');
 		while ($Ligne = mysql_fetch_assoc($Ressource))
 		{
 			$tableau =array();
@@ -86,7 +84,7 @@ private
 	public function ExecuteSQL($Requete)
 	{
 	$Ressource = mysql_query($Requete,$this->Lien);
-	if (!$Ressource and $this->Debug) throw new exception('Erreur de requête SQL!!!');
+	if (!$Ressource) throw new exception('Erreur de requête SQL!!!');
 	$this->NbRequetes++;
 	$NbAffectee = mysql_affected_rows();
 	return $NbAffectee;

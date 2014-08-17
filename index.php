@@ -2,8 +2,8 @@
 /**
  * This file implements the index.
  * 
- * @author    Cédric Levasseur <cedric.levasseur@ipocus.net>
- * @copyright 2014Cédric Levasseur
+ * @author    Cï¿½dric Levasseur <cedric.levasseur@ipocus.net>
+ * @copyright 2014Cï¿½dric Levasseur
  * @license   http://www.gnu.org/licenses/
  * @link      http://github.com/cyr-ius/Kapaseety
  */
@@ -17,7 +17,8 @@ $cache_expire = session_cache_expire();
 // get the time the session should have expired
 $limit = $now - $cache_expire*60;
 ///debug
-static $debug = 1;
+$debug = true;
+global $debug;
 
 // check the time of the last activity
 if (isset ($_SESSION['last_activity']) && $_SESSION['last_activity'] < $limit) {
@@ -30,11 +31,15 @@ if (isset ($_SESSION['last_activity']) && $_SESSION['last_activity'] < $limit) {
   $_SESSION['last_activity'] = $now;
 }
 
-//~ error_log("SID: ".SID."<br>session_id(): ".session_id()."<br>COOKIE: ".$_COOKIE["PHPSESSID"]."<br>TOKEN :".isset($_SESSION['token']));
 /// Because we don't care about notices
 if(function_exists("error_reporting")){
-	error_reporting(E_ERROR | E_WARNING);
+	 error_reporting( E_ERROR | E_WARNING);
 }
+function myErrorHandler($errno, $errstr, $errfile, $errline) {
+	//echo "<b>My ERROR</b> [$errno] $errstr<br />\n";
+        //echo "  Fatal error on line $errline in file $errfile <br/>\n";
+}
+set_error_handler("myErrorHandler");
 
 /// Autoload classes
 function my_autoload($class){
@@ -45,21 +50,16 @@ function my_autoload($class){
 	}
 	require_once dirname(__FILE__).'/3rdparty/json-rpc/jsonRPC2Server.php';	
 }
-
 spl_autoload_register("my_autoload");
 
 /// Take care of nasty exceptions
 function exception_handler($exception) {
   echo "<div class='exception'>" , $exception->getMessage(), "</div>\n";
-      /* Ne pas exécuter le gestionnaire interne de PHP */
+      /* Ne pas exï¿½cuter le gestionnaire interne de PHP */
     return true;
 }
 set_exception_handler('exception_handler');
 
-/// Trace debug
-function trace($message) {
-	if ($GLOBALS['debug']==True) {error_log($message);}
-}
 
 function protect_user_send_var($var){
 	if(is_array($var))
@@ -68,15 +68,13 @@ function protect_user_send_var($var){
 		return addslashes($var);
 }
 
-
 if (!get_magic_quotes_gpc()){
 	$_POST = protect_user_send_var($_POST);
 	$_COOKIE = protect_user_send_var($_COOKIE);
 	$_GET = protect_user_send_var($_GET);
 }
-
-if(preg_match("/application\/json/",$_SERVER['CONTENT_TYPE'])){
-	new API();
+if (isset($_SERVER['CONTENT_TYPE'])) {
+	if(preg_match("/application\/json/",$_SERVER['CONTENT_TYPE'])){ new API();}
 }else{
 	new Index();
 }
