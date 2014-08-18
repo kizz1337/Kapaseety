@@ -12,7 +12,6 @@ abstract class Header implements HTMLObject
 		/// CSS
 		echo "<link rel='stylesheet' type='text/css' href='3rdparty/bootstrap/css/bootstrap.min.css'>\n";		
 		echo "<link rel='stylesheet' type='text/css' href='3rdparty/tablesorter/css/theme.bootstrap.css'>\n";	
-		//~ echo "<link rel='stylesheet' type='text/css' href='3rdparty/metismenu/css/metisMenu.min.css'>\n";
 		echo "<link rel='stylesheet' type='text/css' href='3rdparty/metismenu/css/jquery.metisMenu.css'>\n";
 		echo "<link rel='stylesheet' type='text/css' href='3rdparty/font-awesome-4.1.0/css/font-awesome.min.css'>\n";
 		echo "<link rel='stylesheet' type='text/css' href='3rdparty/dataTables/css/dataTables.bootstrap.css'>\n";

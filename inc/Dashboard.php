@@ -19,6 +19,7 @@ class Dashboard {
 		$this->style->Label('datacenter_vms_total','success','Machines virtuelles','col-lg-6');
 		$this->style->Label('datacenter_hosts_total','success','Hyperviseurs','col-lg-6');
 		echo "</div>";
+		echo "<div class='row'>";
 		//~ echo "<div class='row'>";
 		//~ self::Graph('graph-consommation','col-lg-12');
 		//~ echo "</div>";
@@ -31,6 +32,7 @@ class Dashboard {
 			FROM clusters order by '.$this->order.' '.$this->desc;
 		$Resulats = $this->MySQL->TabResSQL($SQL);
 		$this->style->Tableau($Resulats,"dashboard","Les clusters");
+		echo "</div>";
 	}
 }
 ?>

@@ -18,28 +18,47 @@ class ClusterDetail {
 	function toHTML() {
 		echo "<span id='moref' style='display:none'>".$this->moref."</span>";
 		$SQL='SELECT clustername FROM clusters WHERE cluster_moref="'.$this->moref.'"';
-		$Rslt = $this->MySQL->TabResSQL($SQL);	
-		echo "<div class='row'><div class='col-lg-12'><h3 class='page-header'><i class='fa fa-sitemap fa-fw'></i>".$Rslt[0]['clustername']."</h3></div></div>";
+		$Rslt = $this->MySQL->TabResSQL($SQL);
+		echo "<div class='row'>
+				<div class='col-lg-1'><h1><i class='fa fa-sitemap fa-fw'></i></h1></div>
+				<div class='col-lg-11'><h3> ".$Rslt[0]['clustername']."</h3><h6 class='page-subtitle'></h6></div>
+			</div>";
 		echo "<div class='row'>";
-		$this->style->Graph('graph-ratio-cpu','col-lg-4',200);
-		$this->style->Graph('graph-disk','col-lg-4',200);
-		$this->style->Graph('graph-ratio-vm','col-lg-4',200);
-		echo "</div>";
+		$this->style->Graph('graph-vm-left','col-lg-4',220);
+				echo "<div class='col-lg-4'>";
+					echo "<div class='row'>";
+					$this->style->Graph('graph-ratio-cpu','col-lg-12',105);
+					$this->style->Graph('graph-ratio-vm','col-lg-12',105);
+					echo "</div>";							
+				echo "</div>";			
+		$this->style->Graph('graph-ha','col-lg-4',220);		
+		echo "</div>";				
 		echo "<div class='row'>";
-		$this->style->Label('vm_left','success','Nombre de VM possible','col-lg-4');
-		$this->style->Label('vms_total','warning','Nombre de VM','col-lg-4');
-		$this->style->Label('hosts_total','primary','Nombre d\'hyperviseurs','col-lg-4');
-		echo "</div>";			
-		echo "<div class='row'>";
-		$this->style->Label2('vm_cpu_average','success','CPU moyen','col-lg-2');
-		$this->style->Label2('vm_mem_average','success','RAM moyenne','col-lg-2');	
-		$this->style->Label2('','','','col-lg-4');	
-		$this->style->Label2('cluster_failover_cpu','info','HA CPU','col-lg-2');
-		$this->style->Label2('cluster_failover_mem','info','HA Memoire','col-lg-2');			
+				echo "<div class='panel panel-yellow vmlist-stats' style='margin: 9px 18px;'>";
+				echo "<div class='panel-body'>";
+				$SQL='SELECT vm_moref,vmname,vm_cpu_usage,vm_mem_usage FROM clusters_hosts_vms WHERE cluster_moref="'.$this->moref.'" order by vmname';
+				$Rslt = $this->MySQL->TabResSQL($SQL);
+				foreach ($Rslt as $value) {
+				echo "<button class='btn btn-warning btn-circle' style='margin-left:2px' data-toggle='tooltip' data-placement='top' data-moref='".$value['vm_moref']."' title='Name :".$value['vmname']."\nCPU: ".$value['vm_cpu_usage']."%\nRAM: ".$value['vm_mem_usage']."Mo'><i class='fa fa-laptop'></i></button>";
+				}
+				echo "</div></div>";
 		echo "</div>";		
 		echo "<div class='row'>";
-		$this->style->Graph('graph-consommation','col-lg-12');
+		echo "</div>";			
+		echo "<div class='row'>";
+		$this->style->Graph('graph-consommation','col-lg-8');
+		$this->style->Graph('graph-disk','col-lg-4',220);
 		echo "</div>";	
+		echo "<div class='row'>";
+				echo "<div class='panel panel-primary hostlist-stats' style='margin: 9px 18px;'>";
+				echo "<div class='panel-body'>";
+				$SQL='SELECT moref,hostname,cpu_usage,mem_usage FROM clusters_hosts_vms WHERE cluster_moref="'.$this->moref.'" order by vmname';
+				$Rslt = $this->MySQL->TabResSQL($SQL);
+				foreach ($Rslt as $value) {
+				echo "<button class='btn btn-primary btn-circle' style='margin-left:2px' data-toggle='tooltip' data-placement='top' data-moref='".$value['moref']."' title='Name :".$value['hostname']."\nCPU: ".$value['cpu_usage']."%\nRAM: ".$value['mem_usage']."Mo'><i class='fa fa-building'></i></button>";
+				}
+				echo "</div></div>";
+		echo "</div>";			
 		echo "<div class='row'>";
 		$this->style->Graph('graph-consommation-hist','col-lg-12');
 		echo "</div>";		

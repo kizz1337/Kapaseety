@@ -1,5 +1,20 @@
 <?php
-class Style {
+
+class Stats extends Index
+{
+	
+	private $MySQL;
+	private $Resultat;
+	private $link;
+
+	function __construct(){
+		 $this->MySQL = new SGBD();
+	}
+	
+	function query($sql,$series=false){
+		return $this->MySQL->TabResSQL($sql);
+	}
+	
 
 	function Label($id="myLabel",$type="success",$titre=null,$class=null) {
 		echo '<div id="'.$id.'" class="'.$class.' labelinfo" data-href="'.urlencode($titre).'"><center><h1><span class="label label-'.$type.'"></span></h1><h5 style="padding-top: 5px;">'.$titre.'</h5></center></div>';
@@ -15,43 +30,43 @@ class Style {
 	}
 
 	// Fonction Tableau , prend en argument $this->Resultat , si $this->link vaut TRUE alors crée un lien avec la deuxième colonne en passant en lien 'data-moref' de la premiere colonne.
-	function Tableau($resultat=array(),$classtype=null,$title=null,$nolink=false) {
+	function Tableau() {
 		echo "
-		<div class='cold-lg-12'>
-		<div class='panel panel-default panel-stats ".$classtype."' style='margin: 9px 15px 0px 15px;'>";
+		<div class='cold-lg-12' style='float:left;width:100%;'>
+		<div class='panel panel-default panel-stats ".$this->classtype."' style='padding-left: 0px; margin: 9px 16px 0px 18px;'>";
 
-		if (isset($title)) {echo "<div class='panel-heading'>".$title."</div>";}
+		if (isset($this->title)) {echo "<div class='panel-heading'>".$this->title."</div>";}
 
 		echo "
-		<table class='table table-striped table-hover mydataTable' cellspacing='0' width='100%'>\n
-		<thead>\n
-		<tr>\n";
+		<table class='table table-striped tablesorter'>
+		<thead>
+		<tr>";
 		$j=0;
-		$thead = array_keys($resultat[0]);
+		$thead = array_keys($this->Resulats[0]);
 		foreach ($thead as $th) {
 			if ($j ==0) {
-				if (!$nolink) {
+				if (!$this->link) {
 					next($thead);
 				} else {
-					echo "<th>$th</th>\n";
+					echo "<th>$th</th>";
 				}
 			} else {
-				echo "<th>$th</th>\n";
+				echo "<th>$th</th>";
 			}
 				
 		$j++;
 		}
-		echo "
-		</tr>\n
-		</thead>\n
-		<tbody>\n";
-		foreach ($resultat as $value)  {
-			echo "<tr>\n";
+		echo '
+		</tr>
+		</thead>
+		<tbody>';
+		foreach ($this->Resulats as $value)  {
+			echo '<tr>';
 			$i=0;
 			$tr = array_keys($value);
 			foreach ($tr as $index) {
 				if ($i ==0) {
-					if (!$nolink) {
+					if (!$this->link) {
 						$moref=$value[$index];
 						next($tr);
 						
@@ -60,7 +75,7 @@ class Style {
 					}
 				}  else {
 					if ($i==1) {
-						if (!$nolink) {	
+						if (!$this->link) {	
 							echo '<td><a href="#" data-href="'.$value[$index].'" data-moref="'.$moref.'" >'.$value[$index].'</a></td>';
 						} else {
 							echo '<td>'.$value[$index].'</td>';
@@ -71,15 +86,14 @@ class Style {
 				}
 			$i++;
 			}
-			echo "</tr>\n";
+			echo '</tr>';
 		}
-		echo "
-		</div>\n
-		</tbody>\n
-		</table>\n
-	
-		</div>";
+		echo '
+		</tbody>
+		</table>
+		</div>
+		</div>';
 	}	
-
 }
+
 ?>

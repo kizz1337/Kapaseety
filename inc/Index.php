@@ -23,11 +23,11 @@ class Index
 			case "vm":		$page = new VmDetail($_GET['moref'],( isset($_GET['order']) ? $_GET['order']:1),(isset($_GET['desc']) ? $_GET['desc']:'asc'));
 							$page->toHTML();
 							break;
-			case "vms":		$page = new Stats();
-							$page->VMList($_GET['moref'],( isset($_GET['order']) ? $_GET['order']:1),(isset($_GET['desc']) ? $_GET['desc']:'asc'));
+			case "vms":		$page = new VmList($_GET['moref'],( isset($_GET['order']) ? $_GET['order']:1),(isset($_GET['desc']) ? $_GET['desc']:'asc'));
+							$page->toHTML();
 							break;
-			case "hosts":		$page = new Stats();
-							$page->HostList($_GET['moref'],( isset($_GET['order']) ? $_GET['order']:1),(isset($_GET['desc']) ? $_GET['desc']:'asc'));
+			case "hosts":		$page = new HostList($_GET['moref'],( isset($_GET['order']) ? $_GET['order']:1),(isset($_GET['desc']) ? $_GET['desc']:'asc'));
+							$page->toHTML();
 							break;
 			case "dashboard":	$page = new Dashboard((isset($_GET['order']) ? $_GET['order']:1),(isset($_GET['desc']) ? $_GET['desc']:'asc'));
 							$page->toHTML();
