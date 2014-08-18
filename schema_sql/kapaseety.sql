@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  localhost
--- Généré le :  Lun 18 Août 2014 à 20:36
+-- Généré le :  Lun 18 Août 2014 à 20:37
 -- Version du serveur :  5.5.38-0ubuntu0.12.04.1
 -- Version de PHP :  5.3.10-1ubuntu3.13
 
@@ -188,7 +188,7 @@ CREATE TABLE IF NOT EXISTS `data_clusters` (
   `cluster_datastore_used` int(10) DEFAULT NULL,
   `cluster_date` date DEFAULT NULL,
 `cluster_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=51 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -216,7 +216,7 @@ CREATE TABLE IF NOT EXISTS `data_hosts` (
   `mem_usage` int(10) DEFAULT NULL,
   `date` date DEFAULT NULL,
 `host_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=307 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -237,7 +237,7 @@ CREATE TABLE IF NOT EXISTS `data_vms` (
   `vm_guest_os` varchar(100) DEFAULT NULL,
   `vm_date` date DEFAULT NULL,
 `vm_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4572 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
