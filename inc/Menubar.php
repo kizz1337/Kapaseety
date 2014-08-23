@@ -4,9 +4,11 @@ class Menubar implements HTMLObject
 {
 
 	private $menu;
+	private $MySQL;
 	
 	function __construct(){
 		$this->menu = new Menu();
+                $this->MySQL = new SGBD();
 	}
 	
 	function toHTML() {
@@ -23,6 +25,20 @@ class Menubar implements HTMLObject
                <a class="navbar-brand" data-toggle="modal" data-target="#about" href="#"><img src="'.Settings::$logo_path.'" height="40px" width="120px" style="margin-top:-10px"> '.Settings::$name.'</a>
             </div>
             <!-- /.navbar-header -->
+
+            <form class="navbar-form navbar-right" role="datalist">
+                <div class="form-group">
+                    <select id="madate" class="form-control">';
+                        $SQL = "select distinct cluster_date as madate from data_clusters order by cluster_date desc";
+			$DateRslt = $this->MySQL->TabResSQL($SQL);
+                       $_SESSION['madate'] = $DateRslt[0]['madate'];
+                        foreach ($DateRslt as $key=>$value) {
+                            echo "<option>".$value['madate']."</option>";
+                        }
+                echo '</select>
+                </div>
+            </form>
+
 
             <ul class="nav navbar-top-links navbar-right">
                 <li class="dropdown">

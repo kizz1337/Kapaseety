@@ -57,6 +57,15 @@ function links(){
 		});	
 	})
 	
+	$('#madate').unbind();
+	$('#madate').change(function(){
+		url='/?m=dashboard&madate='+$('#madate').val();
+		$('#page-wrapper').load(url,function(){
+			loadchart_dashboard();
+			init();
+			});
+	});
+	
 	
 	
 	$('.dashboard td a,.ref-cluster a').unbind();

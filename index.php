@@ -73,6 +73,9 @@ if (!get_magic_quotes_gpc()){
 	$_COOKIE = protect_user_send_var($_COOKIE);
 	$_GET = protect_user_send_var($_GET);
 }
+
+$GLOBALS['madate'];
+
 if (isset($_SERVER['CONTENT_TYPE'])) {
 	if(preg_match("/application\/json/",$_SERVER['CONTENT_TYPE'])){ new API();}
 }else{

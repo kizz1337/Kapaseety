@@ -17,7 +17,13 @@ class VmDetail {
 
 	function toHTML() {
 		echo "<span id='moref' style='display:none'>".$this->moref."</span>";
-		$SQL='SELECT vmname,vm_guest_os,vm_powerstate,vm_cpu_num,vm_mem_total FROM vms WHERE vm_moref="'.$this->moref.'"';
+		$SQL='SELECT 
+			vmname,
+			vm_guest_os,
+			vm_powerstate,
+			vm_cpu_num,
+			vm_mem_total 
+			FROM data_vms WHERE vm_date="'.$_SESSION['madate'].'" and vm_moref="'.$this->moref.'"';
 		$Rslt = $this->MySQL->TabResSQL($SQL);	
 		$os = $Rslt[0]['vm_guest_os'];
 		$logo = '<i class="fa fa-desktop fa-fw"></i> '.$os;
@@ -38,9 +44,18 @@ class VmDetail {
 		$this->style->Graph('graph-consommation','col-lg-12');
 		echo "</div>";
 		echo "<div class='row'>";
-		$SQL='SELECT moref,hostname as Hyperviseur,vm_cpu_usage as "CPU Usage (Mhz)",vm_mem_usage as "Memoire Usage (Mo)" FROM vmhosts WHERE vm_moref="'.$this->moref.'" order by '.$this->order.' '.$this->desc;
+		$SQL='SELECT 
+			date,
+			vm_date as "Date",
+			hostname as "Host",
+			vm_cpu_num "vCPU",
+			vm_cpu_usage as "Usage CPU (Mhz)",
+			vm_cpu_total as "Total CPU (Mhz)",
+			vm_mem_usage as "Usage Memory (Mo)",
+			vm_mem_total as "Total Memory (Mo)"
+			FROM ClustersAndHostsAndGuests WHERE vm_moref="'.$this->moref.'" order by vm_date';
 		$Resulats = $this->MySQL->TabResSQL($SQL);
-		$this->style->Tableau($Resulats,"hostlist-stats",null,false,"tables-simple");
+		$this->style->Tableau($Resulats,"datelist-stats");
 		echo "</div>";
 	}
 }

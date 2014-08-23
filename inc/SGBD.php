@@ -32,7 +32,7 @@ private
 		$i = 0;
 		$Ressource = mysql_query($Requete,$this->Lien);
 		$TabResultat=array();
-		//~ if ($debug) {print_r($Requete);}
+		//~ print_r($Requete);
 		if (!$Ressource) throw new exception('Erreur de requête SQL!!!');
 		while ($Ligne = mysql_fetch_assoc($Ressource))
 		{

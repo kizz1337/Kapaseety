@@ -1,13 +1,15 @@
 <?php
-
 class Index
 {
-
 	
 	function __construct(){
 		/// Initialize variables
 		Settings::init();
-		
+		/// Init date
+		if (isset($_GET['madate'])) {
+			$_SESSION['madate'] = $_GET['madate'];
+		}
+
 		/// Check what to do
 		switch ($_GET['m']){
 			
@@ -20,7 +22,7 @@ class Index
 			case "host":		$page = new HostDetail($_GET['moref'],( isset($_GET['order']) ? $_GET['order']:1),(isset($_GET['desc']) ? $_GET['desc']:'asc'));
 							$page->toHTML();
 							break;							
-			case "vm":			$page = new VmDetail($_GET['moref'],( isset($_GET['order']) ? $_GET['order']:1),(isset($_GET['desc']) ? $_GET['desc']:'asc'));
+			case "vm":		$page = new VmDetail($_GET['moref'],( isset($_GET['order']) ? $_GET['order']:1),(isset($_GET['desc']) ? $_GET['desc']:'asc'));
 							$page->toHTML();
 							break;
 			case "vms":		$page = new VmList($_GET['moref'],( isset($_GET['order']) ? $_GET['order']:1),(isset($_GET['desc']) ? $_GET['desc']:'asc'));

@@ -27,13 +27,14 @@ class Dashboard {
 			cluster_moref,
 			clustername as "Nom",
 			cluster_vms_total as "Vms",
-			sum(mem_total) as "Total memory (GB)" ,
+			round(cluster_mem_total/1024) as "Total memory (GB)" ,
 			round(cluster_mem_realcapacity/1024) as "Real capacity (GB)" ,
 			round(cluster_mem_usage/1024) as "Memory Usage (GB)",	
-			round(sum(cpu_total)/1000) as "Total CPU (Ghz)" ,
+			round(cluster_cpu_total/1000) as "Total CPU (Ghz)" ,
 			round(cluster_cpu_realcapacity/1000) as "Real capacity (Ghz)" ,			
 			round(cluster_cpu_usage/1000) as "CPU Usage (Ghz)"		
-			from clusterhosts
+			from data_clusters
+			where cluster_date ="'.$_SESSION['madate'].'"
 			group by cluster_moref
 			order by clustername';
 		$Resulats = $this->MySQL->TabResSQL($SQL);
