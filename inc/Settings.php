@@ -9,6 +9,8 @@ class Settings
 	static public  $name;
 	static public  $logo_path;
 	static public $icon_path;
+	static public $rp_ratio;
+	static public $rp_upper_limit;
 	
 	function __construct(){
 	}
@@ -33,6 +35,9 @@ class Settings
 		Settings::$sgbd_database = $config->sgbd_database;
 		Settings::$name ='KapaSeeTy';
 		Settings::$logo_path ='/img/kapaseety.png';
+		Settings::$rp_ratio = array("gold" =>4,"silver" =>2,"bronze"=>1);
+		Settings::$rp_upper_limit =80000;
+		
 		
 	}
 }

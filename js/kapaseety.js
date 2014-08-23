@@ -21,12 +21,19 @@ var graphOptions = {
 
 function init() {
 
-
-	$('.mydataTable').dataTable({jQueryUI:true,searching:false,scrollX: true,scrollCollapse: true})
+	$('.table-paging').dataTable({jQueryUI:true,searching:false,scrollX: true,scrollCollapse: true})
+	$('.table-simple').dataTable({jQueryUI:true,searching:false,scrollX: true,scrollCollapse: true,paging: false,info:false})
 	
-	 $('#vms_total .label, #hosts_total .label').hover(function() {
+	$('.table-paging,table-simple').on( 'draw.dt',links);
+	
+	links();
+}
+
+function links(){
+	
+	 $('#datacenter_vms_total .label, #datacenter_hosts_total .label').hover(function() {
 		$(this).css('cursor','pointer');
-	});
+	});	
 
 	$('#topmenu .item').unbind();
 	$('#topmenu .item').click(function(){
@@ -52,8 +59,8 @@ function init() {
 	
 	
 	
-	$('.dashboard a,.ref-cluster a').unbind();
-	$('.dashboard a,.ref-cluster a').click(function(){
+	$('.dashboard td a,.ref-cluster a').unbind();
+	$('.dashboard td a,.ref-cluster a').click(function(){
 		url = '/?m=cluster&moref='+$(this).attr('data-moref');
 		$click = $('.sidebar [data-moref='+$(this).attr('data-moref')+']');
 		$('.sidebar .active').removeClass('active').removeClass('selected');
@@ -69,18 +76,17 @@ function init() {
 		
 	})
 
-	$('.cluster-stats a').unbind();
-	$('.cluster-stats a').click(function(){
-		url ='/?m=host&name='+$(this).attr('data-href')+'&moref='+$(this).attr('data-moref');
-		$('#page-wrapper').load(url,function(){
-			loadchart_host();
-			init();
-		});	
+	//~ $('.cluster-stats a').unbind();
+	//~ $('.cluster-stats a').click(function(){
+		//~ url ='/?m=host&name='+$(this).attr('data-href')+'&moref='+$(this).attr('data-moref');
+		//~ $('#page-wrapper').load(url,function(){
+			//~ loadchart_host();
+			//~ init();
+		//~ });	
+	//~ })
 
-	})
-
-	$('.vmlist-stats a,.vmlist-stats .btn').unbind();
-	$('.vmlist-stats a,.vmlist-stats .btn').click(function(){
+	$('.vmlist-stats td a,.vmlist-stats .btn').unbind();
+	$('.vmlist-stats td a,.vmlist-stats .btn').click(function(){
 		url ='/?m=vm&name='+$(this).attr('data-href')+'&moref='+$(this).attr('data-moref');
 		$('#page-wrapper').load(url,function(){
 			loadchart_vm();
@@ -89,8 +95,8 @@ function init() {
 
 	})
 
-	$('.host-stats a,.hostlist-stats a,.hostlist-stats .btn').unbind();
-	$('.host-stats a,.hostlist-stats a,.hostlist-stats .btn').click(function(){
+	$('.hostlist-stats td a,.hostlist-stats .btn').unbind();
+	$('.hostlist-stats td a,.hostlist-stats .btn').click(function(){
 		url ='/?m=host&name='+$(this).attr('data-href')+'&moref='+$(this).attr('data-moref');
 
 		$click = $('.sidebar [data-moref='+$(this).attr('data-moref')+']');
@@ -109,17 +115,17 @@ function init() {
 
 	})
 
-	$('#vms_total').unbind();
-	$('#vms_total').click(function(){
-		url ='/?m=vms&moref='+$('#moref').html();
+	$('#datacenter_vms_total').unbind();
+	$('#datacenter_vms_total').click(function(){
+		url ='/?m=vms';
 		$('#page-wrapper').load(url,function(){
 			init();
 		});	
 	})
 
-	$('#hosts_total').unbind();
-	$('#hosts_total').click(function(){
-		url ='/?m=hosts&moref='+$('#moref').html();
+	$('#datacenter_hosts_total').unbind();
+	$('#datacenter_hosts_total').click(function(){
+		url ='/?m=hosts';
 		$('#page-wrapper').load(url,function(){
 			init();
 		});	
@@ -127,11 +133,20 @@ function init() {
 	})
 	$('#search').unbind();
 	$('#search').change(function(){
-		alert($(this).val());
+		url ='/?m=search&search='+$('#search').val();
+		$('#page-wrapper').load(url,function(){
+			init();
+			$('#search').val(null);
+		});	
 	});
+	
 	$('#search-btn').unbind();
 	$('#search-btn').click(function(){
-		alert($('#search').val());
+		url ='/?m=search&search='+$('#search').val();
+		$('#page-wrapper').load(url,function(){
+			init();
+			$('#search').val(null);
+		});	
 	});	
 	
 	
@@ -140,23 +155,6 @@ function init() {
 function loadchart_vm() {
 
 moref = $('#moref').html();
-
-	var js = JSON.stringify({"jsonrpc":"2.0","method":"WS_Stats.vm_serie","params":[{"moref":moref,"select":"vm_guest_os"}],"id":"1"});
-		$.ajax({url:'',data:js,type:'POST',dataType:"json",contentType: "application/json"})
-		.done(function(data){$('#vm_guest_os .label').html(data.result)});
-
-	var js = JSON.stringify({"jsonrpc":"2.0","method":"WS_Stats.vm_serie","params":[{"moref":moref,"select":"vm_powerstate"}],"id":"1"});
-		$.ajax({url:'',data:js,type:'POST',dataType:"json",contentType: "application/json"})
-		.done(function(data){$('#vm_powerstate .label').html(data.result)});	
-		
-	var js = JSON.stringify({"jsonrpc":"2.0","method":"WS_Stats.vm_serie","params":[{"moref":moref,"select":"vm_cpu_num"}],"id":"1"});
-		$.ajax({url:'',data:js,type:'POST',dataType:"json",contentType: "application/json"})
-		.done(function(data){$('#vm_cpu_num .label').html(data.result)});	
-		
-	var js = JSON.stringify({"jsonrpc":"2.0","method":"WS_Stats.vm_serie","params":[{"moref":moref,"select":"vm_mem_total"}],"id":"1"});
-		$.ajax({url:'',data:js,type:'POST',dataType:"json",contentType: "application/json"})
-		.done(function(data){$('#vm_mem_total .label').html(data.result)});	
-		
 
     $('#graph-cpu').highcharts(Highcharts.merge(gaugeOptions,{
 	title:{ text: 'Compute'},
@@ -171,7 +169,6 @@ moref = $('#moref').html();
 	var js = JSON.stringify({"jsonrpc":"2.0","method":"WS_Stats.vm_serie","params":[{"moref":moref,"select":"round(vm_cpu_usage*100/vm_cpu_total)"}],"id":"1"});
 		$.ajax({url:'',data:js,type:'POST',dataType:"json",contentType: "application/json"})
 		.done(function(data){$('#graph-cpu').highcharts().series[0].setData(data.result[0])});
-	
 	
     $('#graph-mem').highcharts(Highcharts.merge(gaugeOptions,{
 	title:{ text: 'Memory'},
@@ -201,9 +198,8 @@ moref = $('#moref').html();
 		//~ $.ajax({url:'',data:js,type:'POST',dataType:"json",contentType: "application/json"})
 		//~ .done(function(data){$('#graph-disk').highcharts().series[0].setData(data.result[0])});		
 
-
         $('#graph-consommation').highcharts({
-            chart: {type: 'spline',borderRadius:5,borderwidth:0,shadow: true,marginLeft:100,marginRight:150}, title: {text: 'Consommation moyenne d\'une vm par jour'}, subtitle: {text: 'un point de mesure par jour'},
+            chart: {type: 'spline',borderRadius:5,borderwidth:0,shadow: true,marginLeft:100,marginRight:150}, title: {text: 'Consommation moyenne par jour'}, subtitle: {text: 'un point de mesure par jour'},
 	    credits: {enabled: false},
             xAxis: {type:'category',title: {text: 'Date'}, tickmarkPlacement: 'on', title: {enabled: false}},
             yAxis: [
@@ -220,11 +216,7 @@ moref = $('#moref').html();
 	var js = JSON.stringify({"jsonrpc":"2.0","method":"WS_Stats.vm_hist","params":[{"moref":moref,"select":"vm_date,vm_mem_usage"}],"id":"1"});
 		$.ajax({url:'',data:js,type:'POST',dataType:"json",contentType: "application/json"})
 		.done(function(data){$('#graph-consommation').highcharts().series[1].setData(data.result)});
-
-
-
 }
-
 
 function loadchart_cluster(){
 	
@@ -265,7 +257,7 @@ moref = $('#moref').html();
 	var js = JSON.stringify({"jsonrpc":"2.0","method":"WS_Stats.cluster_serie","params":[{"moref":moref,"select":"cluster_vmhost_ratio"}],"id":"1"});
 		$.ajax({url:'',data:js,type:'POST',dataType:"json",contentType: "application/json"})
 		.done(function(data){$('#graph-ratio-vm').highcharts().series[0].setData(data.result[0])});		
-	//Graph Left VM	
+	//Graph Left VM			
     $('#graph-vm-left').highcharts(Highcharts.merge(gaugeOptions,{
 	chart:{shadow:true},
         yAxis: { min: 0, max: 50, title: { text: 'VM Restante '}},
@@ -279,8 +271,8 @@ moref = $('#moref').html();
 		$.ajax({url:'',data:js,type:'POST',dataType:"json",contentType: "application/json"})
 		.done(function(data){
 			$('#graph-vm-left').highcharts().yAxis[0].axisTitle.attr({text:'VM Restante :'+data.result[0][0]+' (moy. '+vm_cpu_average+'Mhz - '+vm_mem_average+'Mo)'});
-			$('#graph-vm-left').highcharts().yAxis[0].setExtremes(0,data.result[0][0]+data.result[0][1]);
-			$('#graph-vm-left').highcharts().series[0].setData(data.result[0]);
+			$('#graph-vm-left').highcharts().yAxis[0].setExtremes(0,(data.result[0][0]+data.result[0][1]));
+			$('#graph-vm-left').highcharts().series[0].setData([data.result[0][1]]);
 			});	
 
 	// Graph HA Cluster
@@ -299,7 +291,7 @@ moref = $('#moref').html();
 		$.ajax({url:'',data:js,type:'POST',dataType:"json",contentType: "application/json"})
 		.done(function(data){$('#graph-ha').highcharts().series[1].setData(data.result[0])});
 		
-	var js = JSON.stringify({"jsonrpc":"2.0","method":"WS_Stats.hosts_total","params":[{"moref":moref,"select":"cluster_hosts_total"}],"id":"1"});
+	var js = JSON.stringify({"jsonrpc":"2.0","method":"WS_Stats.clusters_hosts","params":[{"moref":moref,"select":"count(moref) as Hosts_num"}],"id":"1"});
 		$.ajax({url:'',data:js,type:'POST',dataType:"json",contentType: "application/json"})
 		.done(function(data){
 			$('#graph-ha').highcharts().yAxis[0].setExtremes(0,data.result[0]);
@@ -324,7 +316,7 @@ moref = $('#moref').html();
 
 	
         $('#graph-consommation-hist').highcharts(Highcharts.merge(graphOptions,{
-            chart: {type: 'spline',marginLeft:150,marginRight:150}, title: {text: 'Consommation moyenne d\'une vm par jour'}, subtitle: {text: 'un point de mesure par jour'},
+            chart: {type: 'spline',marginLeft:150,marginRight:150}, title: {text: 'Consommation moyenne des vms par jour'}, subtitle: {text: 'un point de mesure par jour'},
             xAxis: {type:'category',title: {text: 'Date'}, tickmarkPlacement: 'on', title: {enabled: false}},
             yAxis: [
 		{labels: {format: '{value} Mhz',style: {color: Highcharts.getOptions().colors[0]}},title: {text: 'CPU Usage (Mhz)', style: {color: Highcharts.getOptions().colors[0]}}, min: 0},
@@ -358,77 +350,28 @@ moref = $('#moref').html();
 		$.ajax({url:'',data:js,type:'POST',dataType:"json",contentType: "application/json"})
 		.done(function(data){$('#graph-nombrevm-hist').highcharts().series[1].setData(data.result)});	
 
-
-	//~ var js = JSON.stringify({"jsonrpc":"2.0","method":"WS_Stats.cluster_serie","params":[{"moref":moref,"select":"cluster_datastore_total"}],"id":"1"});
-		//~ $.ajax({url:'',data:js,type:'POST',dataType:"json",contentType: "application/json"})
-		//~ .done(function(data){ 
-			//~ var datastore_total = data.result[0][0];
-			//~ var minds = Math.round(datastore_total*60/100);
-			//~ var medds = Math.round(datastore_total*80/100);
-			//~ $('#graph-disk').highcharts(Highcharts.merge(graphOptions,{
-			    //~ chart: {type: 'gauge',plotBackgroundColor: null,plotBackgroundImage: null,plotBorderWidth: 0,plotShadow: false},
-			    //~ title: { text: 'Espace disque'},
-			    //~ pane: {startAngle: -150,endAngle: 150,background: [{
-				//~ backgroundColor: {linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },stops: [[0, '#FFF'],[1, '#333']]},borderWidth: 0,outerRadius: '109%'}, {
-				//~ backgroundColor: {linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },stops: [[0, '#333'],[1, '#FFF']]},borderWidth: 1,outerRadius: '107%'}, {
-				//~ // default background 
-				//~ }, {
-				//~ backgroundColor: '#DDD',borderWidth: 0,outerRadius: '105%',innerRadius: '103%'}]},
-			    //~ yAxis: {
-				//~ min: 0,max: datastore_total,minorTickInterval: 'auto',minorTickWidth: 1,minorTickLength: 10,minorTickPosition: 'inside',minorTickColor: '#666',
-				//~ tickPixelInterval: 30,tickWidth: 2,tickPosition: 'inside',tickLength: 10,tickColor: '#666',labels: {step: 2,rotation: 'auto'},
-				//~ title: {text: 'Go'},
-				//~ plotBands: [{from: 0,to: minds,color: '#55BF3B'}, {from: minds,to: medds,color: '#DDDF0D'}, {from: medds,to: datastore_total,color: '#DF5353'}] },
-			    //~ series: [{name: 'Taille',tooltip: {valueSuffix: ' Go'},data:[0]}]
-			//~ },function(){
-				//~ var js = JSON.stringify({"jsonrpc":"2.0","method":"WS_Stats.cluster_serie","params":[{"moref":moref,"select":"cluster_datastore_used"}],"id":"1"});
-				//~ $.ajax({url:'',data:js,type:'POST',dataType:"json",contentType: "application/json"})
-				//~ .done(function(data){$('#graph-disk').highcharts().series[0].setData(data.result[0])})
-			//~ }));
-		//~ });
-
 	//Graph Ratio VM
     $('#graph-disk').highcharts(Highcharts.merge(gaugeOptions,{
 	title: {text: 'Disk Usage'},
         yAxis: { min: 0, max: 1000,title: {text: 'Free space'}},
 	series: [{	name: 'Go', 
 			data: [0],
-			dataLabels: {format: '<div style="text-align:center"><span style="font-size:14px">{y} </span></div>'},
+			dataLabels: {format: '<div style="text-align:center"><span style="font-size:14px">{y} Go</span></div>'},
 			tooltip: {valueSuffix: ' Go'}
 		   }]
 	}));
 	var js = JSON.stringify({"jsonrpc":"2.0","method":"WS_Stats.cluster_serie","params":[{"moref":moref,"select":"cluster_datastore_used,cluster_datastore_total,cluster_datastore_free"}],"id":"1"});
 		$.ajax({url:'',data:js,type:'POST',dataType:"json",contentType: "application/json"})
 		.done(function(data){
-			$('#graph-disk').highcharts().yAxis[0].axisTitle.attr({text:'Free space :'+data.result[0][2]});
+			$('#graph-disk').highcharts().yAxis[0].axisTitle.attr({text:'Free space :'+data.result[0][2]+'<br/>Total space :'+data.result[0][1]});
 			$('#graph-disk').highcharts().yAxis[0].setExtremes(0,data.result[0][1]);
-			$('#graph-disk').highcharts().series[0].setData((data.result[0][0]*1));
+			$('#graph-disk').highcharts().series[0].setData(([data.result[0][0]]));
 		});		
-
-
-	
 }
 
 function loadchart_host(){
 
 moref = $('#moref').html();
-	
-	var js = JSON.stringify({"jsonrpc":"2.0","method":"WS_Stats.host_serie","params":[{"moref":moref,"select":"vm_num"}],"id":"1"});
-		$.ajax({url:'',data:js,type:'POST',dataType:"json",contentType: "application/json"})
-		.done(function(data){$('#vms_total .label').html(data.result)});
-
-	var js = JSON.stringify({"jsonrpc":"2.0","method":"WS_Stats.host_serie","params":[{"moref":moref,"select":"version"}],"id":"1"});
-		$.ajax({url:'',data:js,type:'POST',dataType:"json",contentType: "application/json"})
-		.done(function(data){$('#version .label').html(data.result)});
-
-	var js = JSON.stringify({"jsonrpc":"2.0","method":"WS_Stats.host_serie","params":[{"moref":moref,"select":"manufacturer"}],"id":"1"});
-		$.ajax({url:'',data:js,type:'POST',dataType:"json",contentType: "application/json"})
-		.done(function(data){$('#manufacturer .label').html(data.result)});
-		
-	var js = JSON.stringify({"jsonrpc":"2.0","method":"WS_Stats.host_serie","params":[{"moref":moref,"select":"cluster"}],"id":"1"});
-		$.ajax({url:'',data:js,type:'POST',dataType:"json",contentType: "application/json"})
-		.done(function(data){$('#cluster .label').html(data.result)});		
-
 
     $('#graph-cpu').highcharts(Highcharts.merge(gaugeOptions,{
 	title: { text: 'Compute'},
@@ -494,16 +437,9 @@ moref = $('#moref').html();
 	var js = JSON.stringify({"jsonrpc":"2.0","method":"WS_Stats.host_hist","params":[{"moref":moref,"select":"date,round(datastore_used*100/datastore_total)"}],"id":"1"});
 		$.ajax({url:'',data:js,type:'POST',dataType:"json",contentType: "application/json"})
 		.done(function(data){$('#graph-consommation').highcharts().series[2].setData(data.result)});
-
-	
-	
 }
 
 function loadchart_dashboard() {
-
-moref = $('#moref').html();
-
-
 
 	var js = JSON.stringify({"jsonrpc":"2.0","method":"WS_Stats.vms_total","params":[],"id":"1"});
 		$.ajax({url:'',data:js,type:'POST',dataType:"json",contentType: "application/json"})
@@ -512,11 +448,6 @@ moref = $('#moref').html();
 	var js = JSON.stringify({"jsonrpc":"2.0","method":"WS_Stats.hosts_total","params":[],"id":"1"});
 		$.ajax({url:'',data:js,type:'POST',dataType:"json",contentType: "application/json"})
 		.done(function(data){$('#datacenter_hosts_total .label').html(data.result)});	
-
-
-
-
-
 }
 
 function update_url(url,name){

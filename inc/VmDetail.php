@@ -40,7 +40,7 @@ class VmDetail {
 		echo "<div class='row'>";
 		$SQL='SELECT moref,hostname as Hyperviseur,vm_cpu_usage as "CPU Usage (Mhz)",vm_mem_usage as "Memoire Usage (Mo)" FROM vmhosts WHERE vm_moref="'.$this->moref.'" order by '.$this->order.' '.$this->desc;
 		$Resulats = $this->MySQL->TabResSQL($SQL);
-		$this->style->Tableau($Resulats,"host-stats");
+		$this->style->Tableau($Resulats,"hostlist-stats",null,false,"tables-simple");
 		echo "</div>";
 	}
 }

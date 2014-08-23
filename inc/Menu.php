@@ -38,9 +38,9 @@ class Menu implements HTMLObject
                         <li>
                             <a href="#"><i class="fa fa-sitemap fa-fw"></i> Clusters<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">';
-					$SQL='select distinct clustername,cluster_moref from clusters';
-					$this->Resulats = $this->query($SQL);
-					foreach ($this->Resulats as $value)  {
+					$SQL='select distinct clustername,cluster_moref from clusters order by clustername';
+					$ClustersList = $this->query($SQL);
+					foreach ($ClustersList as $value)  {
 					echo "<li><a class='item' href='#' data-moref='".$value['cluster_moref']."' data-href='cluster'>".$value['clustername']."</a>";
 					}
                       echo '</ul>
@@ -49,14 +49,12 @@ class Menu implements HTMLObject
                         <li>
                             <a href="#"><i class="fa fa-building fa-fw"></i> Hosts<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">';
-					$SQL='select distinct clustername,cluster_moref from clusters';
-					$this->Resulats = $this->query($SQL);
-					foreach ($this->Resulats as $value)  {
+					foreach ($ClustersList as $value)  {
 						echo "<li><a href='#'>".$value['clustername']."</a>";
-						$SQLHosts='select distinct hostname,moref from hosts';
-						$this->ResulatsHosts = $this->query($SQLHosts);
+						$SQLHosts='select distinct hostname,moref from hosts where moref_cluster ="'.$value['cluster_moref'].'" order by hostname';
+						$HostsList = $this->query($SQLHosts);
 							echo '<ul class="nav nav-third-level">';
-							foreach ($this->ResulatsHosts as $value)  {
+							foreach ($HostsList as $value)  {
 								echo "<li><a class='item' href='#' data-moref='".$value['moref']."' data-href='host'>".$value['hostname']."</a>";
 							}
 							echo '</ul>';

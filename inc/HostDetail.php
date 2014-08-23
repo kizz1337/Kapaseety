@@ -52,6 +52,12 @@ class HostDetail {
 		$this->style->Graph('graph-consommation','col-lg-12');
 		echo "</div>";	
 		echo "<div class='row'>";
+		$SQL='SELECT vm_moref,vmname as "Name",vm_guest_os as "OS" ,vm_cpu_num "Cores",vm_cpu_total as "Total compute",vm_mem_total as "Total memory"
+			FROM vmhosts WHERE moref="'.$this->moref.'" order by '.$this->order.' '.$this->desc;
+		$Resulats = $this->MySQL->TabResSQL($SQL);
+		$this->style->Tableau($Resulats,"vmlist-stats");
+		echo "</div>";		
+		echo "<div class='row'>";
 		$SQL='SELECT 
 			cpu_socket_num as "Cores",
 			mem_total as "Memory (Mo)",
@@ -62,7 +68,7 @@ class HostDetail {
 			date as "Date"
 			FROM data_hosts WHERE moref="'.$this->moref.'" order by '.$this->order.' '.$this->desc;
 		$Resulats = $this->MySQL->TabResSQL($SQL);
-		$this->style->Tableau($Resulats,"host-stats",null,true);
+		$this->style->Tableau($Resulats,null,null,true);
 		echo "</div>";	
 	}
 }

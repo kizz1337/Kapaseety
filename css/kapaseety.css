@@ -5,6 +5,24 @@ body {
 	margin-top:5px;
 	padding-top :0px;
 }
+.gold {
+	background-color:#FFD700;
+	border-color:#FFD700;
+	color:black;
+}
+.silver {
+	background-color:#C0C0C0;
+	border-color:#C0C0C0;
+	color:black;
+}
+.bronze {
+	background-color:#CD7F32;
+	border-color:#CD7F32;
+	color:black;
+}
+
+
+
 .gauge {
 	margin-top:5px;
 }
@@ -16,6 +34,64 @@ body {
 .page-subtitle {
    border-bottom : 1px solid #eee;
    padding-bottom: 9px;
+}
+
+.panel-yellow-titletab {
+   -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-color: #f0ad4e;
+    border-color: #f0ad4e;
+    border-image: none;
+    border-radius: 4px 4px 0 0;
+    border-style: solid solid none;
+    border-width: 1px 1px medium;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+    margin-bottom: 0;
+    margin-left: 9px;
+    margin-top: 9px;
+    padding-bottom: 0;
+    padding-left: 5px;
+    padding-top: 0;
+    width: 150px;
+    color:white;
+    font-size:12px;
+}
+
+.panel-yellow-bodytab {
+    border-color: #f0ad4e;
+	margin: 0px 9px 18px;
+	border-radius:0 4px;
+}
+
+.panel-primary-bodytab {
+    border-color: #428bca;
+	margin: 0px 9px 18px;
+	border-radius:0 4px;
+}
+
+.panel-primary-titletab {
+   -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-color: #428bca;
+	border-color: #428bca;
+    border-image: none;
+    border-radius: 4px 4px 0 0;
+    border-style: solid solid none;
+    border-width: 1px 1px medium;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+    margin-bottom: 0;
+    margin-left: 9px;
+    margin-top: 9px;
+    padding-bottom: 0;
+    padding-left: 5px;
+    padding-top: 0;
+    width: 150px;
+    color:white;
+    font-size:12px;
 }
 
 

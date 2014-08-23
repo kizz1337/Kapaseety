@@ -20,7 +20,7 @@ class Index
 			case "host":		$page = new HostDetail($_GET['moref'],( isset($_GET['order']) ? $_GET['order']:1),(isset($_GET['desc']) ? $_GET['desc']:'asc'));
 							$page->toHTML();
 							break;							
-			case "vm":		$page = new VmDetail($_GET['moref'],( isset($_GET['order']) ? $_GET['order']:1),(isset($_GET['desc']) ? $_GET['desc']:'asc'));
+			case "vm":			$page = new VmDetail($_GET['moref'],( isset($_GET['order']) ? $_GET['order']:1),(isset($_GET['desc']) ? $_GET['desc']:'asc'));
 							$page->toHTML();
 							break;
 			case "vms":		$page = new VmList($_GET['moref'],( isset($_GET['order']) ? $_GET['order']:1),(isset($_GET['desc']) ? $_GET['desc']:'asc'));
@@ -31,7 +31,14 @@ class Index
 							break;
 			case "dashboard":	$page = new Dashboard((isset($_GET['order']) ? $_GET['order']:1),(isset($_GET['desc']) ? $_GET['desc']:'asc'));
 							$page->toHTML();
-							break;							
+							break;
+			case "search":		$page = new Search($_GET['search'],(isset($_GET['order']) ? $_GET['order']:1),(isset($_GET['desc']) ? $_GET['desc']:'asc'));
+							$page->toHTML();
+							break;
+			case "c"	:		$page = new RPCompute();
+							$page->compute('domain-c138131');
+							break;
+							
 			default	:		$page = new MainPage();
 							$page->toHTML();
 							break;							

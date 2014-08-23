@@ -15,15 +15,18 @@ class Style {
 	}
 
 	// Fonction Tableau , prend en argument $this->Resultat , si $this->link vaut TRUE alors crée un lien avec la deuxième colonne en passant en lien 'data-moref' de la premiere colonne.
-	function Tableau($resultat=array(),$classtype=null,$title=null,$nolink=false) {
+	function Tableau($resultat=array(),$classtype=null,$title=null,$nolink=false,$tableclass="table-paging") {
+		if (count($resultat) == 0)  {
+			return;
+		}
 		echo "
 		<div class='cold-lg-12'>
-		<div class='panel panel-default panel-stats ".$classtype."' style='margin: 9px 15px 0px 15px;'>";
+		<div class='panel panel-default panel-stats ".$classtype."' style='margin: 9px 9px 0px '>";
 
 		if (isset($title)) {echo "<div class='panel-heading'>".$title."</div>";}
 
 		echo "
-		<table class='table table-striped table-hover mydataTable' cellspacing='0' width='100%'>\n
+		<table class='table table-striped table-hover ".$tableclass."' cellspacing='0' width='100%'>\n
 		<thead>\n
 		<tr>\n";
 		$j=0;
@@ -74,10 +77,9 @@ class Style {
 			echo "</tr>\n";
 		}
 		echo "
-		</div>\n
 		</tbody>\n
 		</table>\n
-	
+		</div>\n
 		</div>";
 	}	
 

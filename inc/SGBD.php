@@ -51,6 +51,7 @@ private
 	*/
 	public function ResSQL($Requete)
 	{
+		//~ echo $Requete;
 		$i = 0;
 		$Ressource = mysql_query($Requete,$this->Lien);
 		//~ print_r(json_encode(mysql_fetch_assoc($Ressource)));

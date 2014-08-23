@@ -44,6 +44,7 @@ class WS_Stats
 		 return $this->MySQL->ResSQL('select count(vmname) from vms');
 		 } catch (Exception $e) { throw new jsonRPCException($e);}
 	}
+	
 	public function hosts_total($variables){
 		try {
 		 return $this->MySQL->ResSQL('select count(hostname) from hosts');
@@ -51,8 +52,13 @@ class WS_Stats
 	}	
 	public function clusters_hosts_vms($variables){
 		try {
-		 return $this->MySQL->ResSQL('select '. mysql_real_escape_string($variables['select']).' from clusters_hosts_vms where cluster_moref="'.mysql_real_escape_string($variables['moref']).'"');
+		 return $this->MySQL->ResSQL('select '. mysql_real_escape_string($variables['select']).' from clusters_hosts_vms where cluster_moref="'.mysql_real_escape_string($variables['moref']).'" or moref="'.mysql_real_escape_string($variables['moref']).'" or vm_moref="'.mysql_real_escape_string($variables['moref']).'"');
 		 } catch (Exception $e) { throw new jsonRPCException($e);}
-	}		
+	}	
+	public function clusters_hosts($variables){
+		try {
+		 return $this->MySQL->ResSQL('select '. mysql_real_escape_string($variables['select']).' from clusterhosts where cluster_moref="'.mysql_real_escape_string($variables['moref']).'" or moref="'.mysql_real_escape_string($variables['moref']).'"');
+		 } catch (Exception $e) { throw new jsonRPCException($e);}
+	}
 }
 ?>

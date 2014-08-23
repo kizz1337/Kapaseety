@@ -36,8 +36,8 @@ if(function_exists("error_reporting")){
 	 error_reporting( E_ERROR | E_WARNING);
 }
 function myErrorHandler($errno, $errstr, $errfile, $errline) {
-	//echo "<b>My ERROR</b> [$errno] $errstr<br />\n";
-        //echo "  Fatal error on line $errline in file $errfile <br/>\n";
+	//~ echo "<b>My ERROR</b> [$errno] $errstr<br />\n";
+        //~ echo "  Fatal error on line $errline in file $errfile <br/>\n";
 }
 set_error_handler("myErrorHandler");
 

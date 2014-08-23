@@ -26,10 +26,16 @@ class Dashboard {
 		$SQL='SELECT 
 			cluster_moref,
 			clustername as "Nom",
-			cluster_vms_total as "Nombre de VM",
-			cluster_mem_total as "Memoire totale (Mo)" ,
-			cluster_cpu_total as "CPU totale (Mhz)" 
-			FROM clusters order by '.$this->order.' '.$this->desc;
+			cluster_vms_total as "Vms",
+			sum(mem_total) as "Total memory (GB)" ,
+			round(cluster_mem_realcapacity/1024) as "Real capacity (GB)" ,
+			round(cluster_mem_usage/1024) as "Memory Usage (GB)",	
+			round(sum(cpu_total)/1000) as "Total CPU (Ghz)" ,
+			round(cluster_cpu_realcapacity/1000) as "Real capacity (Ghz)" ,			
+			round(cluster_cpu_usage/1000) as "CPU Usage (Ghz)"		
+			from clusterhosts
+			group by cluster_moref
+			order by clustername';
 		$Resulats = $this->MySQL->TabResSQL($SQL);
 		$this->style->Tableau($Resulats,"dashboard","Les clusters");
 		echo "</div>";
