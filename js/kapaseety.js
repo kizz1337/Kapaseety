@@ -37,9 +37,13 @@ function links(){
 	$('#topmenu .item').click(function(event){
 		type = $(this).attr('data-href');
 		url = '/?m='+type+'&moref='+$(this).attr('data-moref')+'&madate='+$('#madate').val();
-		update_url(url);
-		$('.sidebar .selected').removeClass('active').removeClass('selected');
-		$(this).parent().addClass('active selected');
+					event.preventDefault();
+
+		//~ update_url(url);
+		if ($('#side-menu').find(this).length ==1) {
+			$('#side-menu .selected').removeClass('active').removeClass('selected');
+			$(this).parent().addClass('active selected');
+		}
 		$('#page-wrapper').load(url,function(){
 			if (type=='cluster') {
 				loadchart_cluster();}
@@ -53,7 +57,6 @@ function links(){
 				loadchart_dashboard();}				
 			init();
 		});	
-	return false;
 	})
 	
 	$('#madate').unbind();
@@ -70,7 +73,7 @@ function links(){
 		$click.parent().addClass('active selected');
 		$click.parent().parent('ul').collapse('show');
 		$click.parent().parent().parent().addClass('active');
-		update_url(url);
+		//~ update_url(url);
 		$('#page-wrapper').load(url,function(){
 			loadchart_cluster();
 			init();
@@ -81,7 +84,7 @@ function links(){
 	$('.vmlist-stats td a,.vmlist-stats .btn').unbind();
 	$('.vmlist-stats td a,.vmlist-stats .btn').click(function(){
 		url ='/?m=vm&moref='+$(this).attr('data-moref');
-		update_url(url);
+		//~ update_url(url);
 		$('#page-wrapper').load(url,function(){
 			loadchart_vm();
 			init();
@@ -92,7 +95,7 @@ function links(){
 	$('.hostlist-stats td a,.hostlist-stats .btn').unbind();
 	$('.hostlist-stats td a,.hostlist-stats .btn').click(function(){
 		url ='/?m=host&moref='+$(this).attr('data-moref');
-		update_url(url);
+		//~ update_url(url);
 		$click = $('.sidebar [data-moref='+$(this).attr('data-moref')+']');
 		$('.sidebar .active').removeClass('active').removeClass('selected');
 		$('.sidebar .in').removeClass('in');
@@ -111,7 +114,7 @@ function links(){
 	$('#datacenter_vms_total').unbind();
 	$('#datacenter_vms_total').click(function(){
 		url ='/?m=vms';
-		update_url(url);
+		//~ update_url(url);
 		$('#page-wrapper').load(url,function(){
 			init();
 		});	
@@ -121,7 +124,7 @@ function links(){
 	$('#datacenter_hosts_total').unbind();
 	$('#datacenter_hosts_total').click(function(){
 		url ='/?m=hosts';
-		update_url(url);
+		//~ update_url(url);
 		$('#page-wrapper').load(url,function(){
 			init();
 		});	
@@ -131,7 +134,7 @@ function links(){
 	$('#search').unbind();
 	$('#search').change(function(){
 		url ='/?m=search&search='+$('#search').val();
-		update_url(url);
+		//~ update_url(url);
 		$('#page-wrapper').load(url,function(){
 			init();
 			$('#search').val(null);
@@ -141,7 +144,7 @@ function links(){
 	$('#search-btn').unbind();
 	$('#search-btn').click(function(){
 		url ='/?m=search&search='+$('#search').val();
-		update_url(url);
+		//~ update_url(url);
 		$('#page-wrapper').load(url,function(){
 			init();
 			$('#search').val(null);
@@ -432,21 +435,22 @@ function update_url(url,name){
 }
 
 
-function ActiveMetis() {
-	$('[data-moref="h-2"]').parent('li').addClass('active');
-	$('[data-moref="h-2"]').parent('li').addClass('selected');
-}
-
 $(document).ready(function(){
 	//Load init
+	
+	$('#side-menu [data-href="dashboard"]').parent('li').addClass('active');
+	$('#side-menu [data-href="dashboard"]').parent('li').addClass('selected');	
 	$('#side-menu').metisMenu();
 	init();
 });
 
 
-$(window).bind('popstate', function(event) {
-	location.reload();
-});
+//~ $(window).bind('popstate', function(e){
+	//~ if ( e.originalEvent.state !== null) {
+		//~ location.reload();
+	//~ }
+//~ });
+
 
 $(window).bind("load resize", function() {
         topOffset = 50;

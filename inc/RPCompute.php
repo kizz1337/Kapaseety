@@ -16,8 +16,8 @@ private $UpperLimit;
 	}
 	
 	function compute($moref) {
-		$MinPoolCPUshares = 100;
-		$MinPoolMemshares = 100;
+		$MinPoolCPUshares = Settings::$MinPoolCPUshares;
+		$MinPoolMemshares = Settings::$MinPoolMemshares;
 	
 		$arrayindex = 0;
 		foreach ($this->RatioRP as $key=>$ratio) {

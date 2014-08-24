@@ -6,12 +6,14 @@ class Settings
 	static public  $sgbd_user;
 	static public  $sgbd_password;
 	static public  $sgbd_database;
-	static public  $name;
-	static public  $logo_path;
+	static public  $name = "KapaSeeTy";
+	static public  $logo_path="/img/kapaseety.png";
 	static public $icon_path;
 	static public $rp_ratio;
-	static public $rp_upper_limit;
+	static public $rp_upper_limit =80000;
 	static public $timestamp;
+	static public $MinPoolCPUshares = 100;
+	static public $MinPoolMemshares = 100;
 	
 	function __construct(){
 	}
@@ -39,12 +41,30 @@ class Settings
 		Settings::$sgbd_user = $config->sgbd_user ;
 		Settings::$sgbd_password = $config->sgbd_password;
 		Settings::$sgbd_database = $config->sgbd_database;
-		Settings::$name ='KapaSeeTy';
-		Settings::$logo_path ='/img/kapaseety.png';
+		//~ Settings::$name ='KapaSeeTy';
+		//~ Settings::$logo_path ='/img/kapaseety.png';
 		Settings::$rp_ratio = array("gold" =>4,"silver" =>2,"bronze"=>1);
-		Settings::$rp_upper_limit =80000;
-		
-		
+		//~ Settings::$rp_upper_limit =80000;
+	}
+	
+	function toHTML() {
+		echo '<div class="row">
+		<form role="form">
+		  <div class="form-group">
+		    <label for="name">Site Name</label>
+		    <input type="text" class="form-control" id="name" placeholder="Enter site name" value="'.Settings::$name.'"/>
+		  </div>
+		  <div class="form-group">
+		    <label for="logo_path">Path of logo</label>
+		    <input type="text" class="form-control" id="logo_path" placeholder="Enter logo path" value="'.Settings::$logo_path.'"/>
+		  </div>
+		  <div class="form-group">
+		    <label for="rp_upper_limit">Resource Pool Max</label>
+		    <input type="text" class="form-control" id="rp_upper_limit" placeholder="Upper  maximum limit" value="'.Settings::$rp_upper_limit.'"/>
+		  </div>		  
+		  <button type="submit" class="btn btn-default">Submit</button>
+		</form>
+			</div>';
 	}
 }
 

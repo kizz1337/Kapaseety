@@ -23,6 +23,8 @@ class Index
 							break;
 			case "search":		$page = new Search($_GET['search']);
 							break;
+			case "settings":	$page= new Settings();
+							break;
 			default	:		$page = new Dashboard();
 							$menu = "dashboard";
 							break;							
