@@ -11,12 +11,12 @@ class Settings
 	static public $icon_path;
 	static public $rp_ratio;
 	static public $rp_upper_limit;
+	static public $timestamp;
 	
 	function __construct(){
 	}
 	
 	static public function init($config_file=NULL) {
-
 		/// Load config.php file 
 		if (!isset($config_file)){
 		    $config_file		=	realpath(dirname(__FILE__)."/../config.php");
@@ -26,7 +26,13 @@ class Settings
 		
 			throw new Exception("You need to create a configuration file.");
 		}
-
+		/// Check Timestamp for all pages
+		if (isset($_GET['madate'])) { 
+			Settings::$timestamp = $_GET['madate'];
+			setcookie("timestamp",$_GET['madate']);
+		} elseif (isset($_COOKIE['timestamp'])) {
+			Settings::$timestamp = $_COOKIE['timestamp'];
+		}
 		/// Set TimeZone
 		date_default_timezone_set($config->timezone);			
 		Settings::$sgbd_server = $config->sgbd_server ;

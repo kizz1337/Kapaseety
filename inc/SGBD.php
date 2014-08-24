@@ -51,18 +51,24 @@ private
 	*/
 	public function ResSQL($Requete)
 	{
-		//~ echo $Requete;
 		$i = 0;
 		$Ressource = mysql_query($Requete,$this->Lien);
-		//~ print_r(json_encode(mysql_fetch_assoc($Ressource)));
+		$num_rows = mysql_num_rows($Ressource);
 		if (!$Ressource) throw new exception('Erreur de requête SQL!!!');
 		while ($Ligne = mysql_fetch_assoc($Ressource))
 		{
-			$tableau =array();
-			foreach ($Ligne as $key=>$valeur) {
-				$tableau[] = $valeur;
+			if ($num_rows >1) {
+				$tableau =array();
+				foreach ($Ligne as $key=>$valeur) {
+					$tableau[] = $valeur;
+				}
+				$TabResultat[] = $tableau;
+			} else {
+				foreach ($Ligne as $key=>$valeur) {
+					$TabResultat[] = $valeur;
+				}
 			}
-			 $TabResultat[] = $tableau;
+
 		}
 		mysql_free_result($Ressource);
 		$this->NbRequetes++;

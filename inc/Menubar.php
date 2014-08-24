@@ -31,7 +31,8 @@ class Menubar implements HTMLObject
                     <select id="madate" class="form-control">';
                         $SQL = "select distinct cluster_date as madate from data_clusters order by cluster_date desc";
 			$DateRslt = $this->MySQL->TabResSQL($SQL);
-                       $_SESSION['madate'] = $DateRslt[0]['madate'];
+                        Settings::$timestamp = $DateRslt[0]['madate'];
+                       setcookie("timestamp", $DateRslt[0]['madate']);
                         foreach ($DateRslt as $key=>$value) {
                             echo "<option>".$value['madate']."</option>";
                         }

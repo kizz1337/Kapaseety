@@ -2,15 +2,11 @@
 class ClusterDetail {
 
 	private $moref;
-	private $order;
-	private $desc;
 	private $style;
 	private $MySQL;
 
-	function __construct($moref,$order = "1",$desc = "desc") {
+	function __construct($moref) {
 		$this->moref = $moref;
-		$this->order = $order;
-		$this->desc = $desc;
 		$this->style = new Style();
 		$this->MySQL = new SGBD();
 	}
@@ -22,7 +18,7 @@ class ClusterDetail {
 			count(vmname) as vms_num,
 			sum(vm_mem_total) as mem_total,
 			sum(vm_cpu_num) as vcpu_total 
-			FROM ClustersAndHostsAndGuests WHERE cluster_date="'.$_SESSION['madate'].'" and  cluster_moref="'.$this->moref.'"';
+			FROM ClustersAndHostsAndGuests WHERE cluster_date="'.Settings::$timestamp.'" and  cluster_moref="'.$this->moref.'"';
 		$Rslt = $this->MySQL->TabResSQL($SQL);
 
 		echo "<div class='row'>
@@ -44,7 +40,7 @@ class ClusterDetail {
 				echo "<div class='panel panel-yellow-bodytab vmlist-stats'>";
 				echo "<div class='panel-body'>";
 				$SQL='SELECT vm_moref,vmname,vm_cpu_usage,vm_mem_usage 
-				FROM ClustersAndHostsAndGuests WHERE vm_date="'.$_SESSION['madate'].'" and  cluster_moref="'.$this->moref.'" order by vmname';
+				FROM ClustersAndHostsAndGuests WHERE vm_date="'.Settings::$timestamp.'" and  cluster_moref="'.$this->moref.'" order by vmname';
 				$RsltVM = $this->MySQL->TabResSQL($SQL);
 				foreach ($RsltVM as $value) {
 					echo "<button class='btn btn-warning btn-circle' style='margin-left:2px' data-toggle='tooltip' data-placement='top' data-moref='".$value['vm_moref']."' title='Name :".$value['vmname']."\nCPU: ".$value['vm_cpu_usage']."Mhz\nRAM: ".$value['vm_mem_usage']."Mo'><i class='fa fa-laptop'></i></button>";
@@ -60,13 +56,13 @@ class ClusterDetail {
 		echo "<div class='row'>";
 			echo "<div class='col-lg-12'>"; //Host  Buttons List
 				$SQL='SELECT count(hostname) as hosts_num 
-					FROM ClustersAndHosts where cluster_date="'.$_SESSION['madate'].'" and moref_cluster="'.$this->moref.'"';
+					FROM ClustersAndHosts where cluster_date="'.Settings::$timestamp.'" and moref_cluster="'.$this->moref.'"';
 				$Rslt = $this->MySQL->TabResSQL($SQL);
 				echo "<div class='panel-primary-titletab'>Hosts <b>".$Rslt[0]['hosts_num']."</b></div>";		
 				echo "<div class='panel panel-primary-bodytab hostlist-stats'>";
 				echo "<div class='panel-body'>";
 				$SQL='SELECT moref,hostname,cpu_usage,mem_usage 
-					FROM ClustersAndHosts where cluster_date="'.$_SESSION['madate'].'" and moref_cluster="'.$this->moref.'" order by hostname';
+					FROM ClustersAndHosts where cluster_date="'.Settings::$timestamp.'" and moref_cluster="'.$this->moref.'" order by hostname';
 				$Rslt = $this->MySQL->TabResSQL($SQL);
 				foreach ($Rslt as $value) {
 				echo "<button class='btn btn-primary btn-circle' style='margin-left:2px' data-toggle='tooltip' data-placement='top' data-moref='".$value['moref']."' title='Name :".$value['hostname']."\nCPU: ".$value['cpu_usage']."Mhz\nRAM: ".$value['mem_usage']."Mo'><i class='fa fa-building'></i></button>";
@@ -110,7 +106,7 @@ class ClusterDetail {
 			vm_num as "Vm",
 			datastore_free as "Free space (Go)",
 			datastore_used as "Espace pris"
-			FROM data_hosts WHERE date="'.$_SESSION['madate'].'" and moref_cluster="'.$this->moref.'" order by '.$this->order.' '.$this->desc;
+			FROM data_hosts WHERE date="'.Settings::$timestamp.'" and moref_cluster="'.$this->moref.'" order by hostname';
 		$Resultats = $this->MySQL->TabResSQL($SQL);
 		$this->style->Tableau($Resultats,"hostlist-stats",null,false,"table-simple");
 		echo "</div>";

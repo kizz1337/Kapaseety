@@ -1,16 +1,10 @@
 <?php
 class VmList {
 
-	private $moref;
-	private $order;
-	private $desc;
 	private $style;
 	private $MySQL;
 
-	function __construct($moref,$order = "1",$desc = "desc") {
-		$this->moref = $moref;
-		$this->order = $order;
-		$this->desc = $desc;
+	function __construct() {
 		$this->style = new Style();
 		$this->MySQL = new SGBD();
 	}
@@ -29,7 +23,7 @@ class VmList {
 			vm_guest_os as "OS",
 			hostname as "Host",
 			clustername as "Cluster" 
-			FROM ClustersAndHostsAndGuests WHERE vm_date="'.$_SESSION['madate'].'"  order by '.$this->order.' '.$this->desc;			
+			FROM ClustersAndHostsAndGuests WHERE vm_date="'.Settings::$timestamp.'" order by vmname';			
 		$Resultats =  $this->MySQL->TabResSQL($SQL);
 		$this->style->Tableau($Resultats,"vmlist-stats");
 		echo "</div>";	

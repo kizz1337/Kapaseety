@@ -7,10 +7,8 @@ class HostDetail {
 	private $style;
 	private $MySQL;
 
-	function __construct($moref,$order = "1",$desc = "desc") {
+	function __construct($moref) {
 		$this->moref = $moref;
-		$this->order = $order;
-		$this->desc = $desc;
 		$this->style = new Style();
 		$this->MySQL = new SGBD();
 	}
@@ -25,7 +23,7 @@ class HostDetail {
 			mem_total,
 			clustername,
 			cluster_moref 
-			FROM ClustersAndHosts where date="'.$_SESSION['madate'].'" and moref="'.$this->moref.'"';
+			FROM ClustersAndHosts where date="'.Settings::$timestamp.'" and moref="'.$this->moref.'"';
 		$Rslt = $this->MySQL->TabResSQL($SQL);	
 		$os = $Rslt[0]['manufacturer'];
 		$logo = '<i class="fa fa-building fa-fw"></i> '.$os;
@@ -54,7 +52,7 @@ class HostDetail {
 			vmname,
 			vm_cpu_usage,
 			vm_mem_usage 
-			FROM GuestsAndHosts WHERE vm_date="'.$_SESSION['madate'].'" and moref="'.$this->moref.'" order by vmname';
+			FROM GuestsAndHosts WHERE vm_date="'.Settings::$timestamp.'" and moref="'.$this->moref.'" order by vmname';
 		$Rslt = $this->MySQL->TabResSQL($SQL);
 		foreach ($Rslt as $value) {
 		echo "<button class='btn btn-warning btn-circle' style='margin-left:2px' data-toggle='tooltip' data-placement='top' data-moref='".$value['vm_moref']."' title='Name :".$value['vmname']."\nCPU: ".$value['vm_cpu_usage']."%\nRAM: ".$value['vm_mem_usage']."Mo'><i class='fa fa-laptop'></i></button>";
@@ -74,7 +72,7 @@ class HostDetail {
 			vm_cpu_total as "Total CPU (Mhz)",
 			vm_mem_usage as "Usage Memory (Mo)",
 			vm_mem_total as "Total Memory (Mo)"
-			FROM GuestsAndHosts WHERE date="'.$_SESSION['madate'].'" and moref="'.$this->moref.'" order by '.$this->order.' '.$this->desc;
+			FROM GuestsAndHosts WHERE date="'.Settings::$timestamp.'" and moref="'.$this->moref.'" order by vmname';
 		$Resulats = $this->MySQL->TabResSQL($SQL);
 		$this->style->Tableau($Resulats,"vmlist-stats");
 		echo "</div>";		

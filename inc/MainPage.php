@@ -6,6 +6,7 @@ class MainPage  extends Header
 	private $menubar;
 	private $general;
 	private $about;
+	public $content;
 	
 	
 	function __construct(){
@@ -20,16 +21,13 @@ class MainPage  extends Header
 	
 	function toHTML() {
 		$this->header();
-		
 		echo '<body>';
-
 		echo '<div id="wrapper">';
 		$this->menubar->toHTML();
 		  echo '<div id="page-wrapper">';
 			echo '<div class="row">';
 				echo '<div id="content" class="col-lg-12" >';
-					$dashboard = new Dashboard();
-					$dashboard->toHTML();		
+					$this->content->toHTML();		
 				echo '</div>';		
 			echo '</div>';
 		  echo '</div>';

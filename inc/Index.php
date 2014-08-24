@@ -1,51 +1,41 @@
 <?php
 class Index
-{
-	
+{	
 	function __construct(){
+		
 		/// Initialize variables
 		Settings::init();
-		/// Init date
-		if (isset($_GET['madate'])) {
-			$_SESSION['madate'] = $_GET['madate'];
-		}
-
+		$menu = (isset($_GET['m'])? $_GET['m'] : null);
 		/// Check what to do
-		switch ($_GET['m']){
+		switch ($menu){
 			
-			case "datacenter":	$page = new Stats();
-							$page->DataCentDetail($_GET['name'],$_GET['moref'],( isset($_GET['order']) ? $_GET['order']:1),(isset($_GET['desc']) ? $_GET['desc']:'asc'));
+			case "cluster":		$page = new ClusterDetail($_GET['moref']);
 							break;
-			case "cluster":		$page = new ClusterDetail($_GET['moref'],( isset($_GET['order']) ? $_GET['order']:1),(isset($_GET['desc']) ? $_GET['desc']:'asc'));
-							$page->toHTML();
-							break;
-			case "host":		$page = new HostDetail($_GET['moref'],( isset($_GET['order']) ? $_GET['order']:1),(isset($_GET['desc']) ? $_GET['desc']:'asc'));
-							$page->toHTML();
+			case "host":		$page = new HostDetail($_GET['moref']);
 							break;							
-			case "vm":		$page = new VmDetail($_GET['moref'],( isset($_GET['order']) ? $_GET['order']:1),(isset($_GET['desc']) ? $_GET['desc']:'asc'));
-							$page->toHTML();
+			case "vm":		$page = new VmDetail($_GET['moref']);
 							break;
-			case "vms":		$page = new VmList($_GET['moref'],( isset($_GET['order']) ? $_GET['order']:1),(isset($_GET['desc']) ? $_GET['desc']:'asc'));
-							$page->toHTML();
+			case "vms":		$page = new VmList();
 							break;
-			case "hosts":		$page = new HostList($_GET['moref'],( isset($_GET['order']) ? $_GET['order']:1),(isset($_GET['desc']) ? $_GET['desc']:'asc'));
-							$page->toHTML();
+			case "hosts":		$page = new HostList();
 							break;
-			case "dashboard":	$page = new Dashboard((isset($_GET['order']) ? $_GET['order']:1),(isset($_GET['desc']) ? $_GET['desc']:'asc'));
-							$page->toHTML();
+			case "dashboard":	$page = new Dashboard();
 							break;
-			case "search":		$page = new Search($_GET['search'],(isset($_GET['order']) ? $_GET['order']:1),(isset($_GET['desc']) ? $_GET['desc']:'asc'));
-							$page->toHTML();
+			case "search":		$page = new Search($_GET['search']);
 							break;
-			case "c"	:		$page = new RPCompute();
-							$page->compute('domain-c138131');
-							break;
-							
-			default	:		$page = new MainPage();
-							$page->toHTML();
+			default	:		$page = new Dashboard();
+							$menu = "dashboard";
 							break;							
 		}
-
+		//Display page
+		if (!isset($_SERVER['HTTP_REFERER'])) {
+			$displaypage = new MainPage();
+			$displaypage->content = $page;
+			$displaypage->toHTML();
+			echo "<script>loadchart_".$menu."();</script>";
+		} else {
+			$page->toHTML();
+		}
 	}
 }
 

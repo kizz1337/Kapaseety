@@ -2,15 +2,11 @@
 class VmDetail {
 
 	private $moref;
-	private $order;
-	private $desc;
 	private $style;
 	private $MySQL;
 
-	function __construct($moref,$order = "1",$desc = "desc") {
+	function __construct($moref) {
 		$this->moref = $moref;
-		$this->order = $order;
-		$this->desc = $desc;
 		$this->style = new Style();
 		$this->MySQL = new SGBD();
 	}
@@ -23,7 +19,7 @@ class VmDetail {
 			vm_powerstate,
 			vm_cpu_num,
 			vm_mem_total 
-			FROM data_vms WHERE vm_date="'.$_SESSION['madate'].'" and vm_moref="'.$this->moref.'"';
+			FROM data_vms WHERE vm_date="'.Settings::$timestamp.'" and vm_moref="'.$this->moref.'"';
 		$Rslt = $this->MySQL->TabResSQL($SQL);	
 		$os = $Rslt[0]['vm_guest_os'];
 		$logo = '<i class="fa fa-desktop fa-fw"></i> '.$os;

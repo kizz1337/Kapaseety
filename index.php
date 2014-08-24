@@ -2,8 +2,8 @@
 /**
  * This file implements the index.
  * 
- * @author    Cï¿½dric Levasseur <cedric.levasseur@ipocus.net>
- * @copyright 2014Cï¿½dric Levasseur
+ * @author    Cédric Levasseur <cedric.levasseur@ipocus.net>
+ * @copyright 2014Cédric Levasseur
  * @license   http://www.gnu.org/licenses/
  * @link      http://github.com/cyr-ius/Kapaseety
  */
@@ -22,13 +22,13 @@ global $debug;
 
 // check the time of the last activity
 if (isset ($_SESSION['last_activity']) && $_SESSION['last_activity'] < $limit) {
-  // if too old, clear the session array and redirect
-  $_SESSION = array();
- echo "<script>window.location='';</script>";
- exit;
+	// if too old, clear the session array and redirect
+	$_SESSION = array();
+	echo "<script>window.location='/';</script>";
+	exit;
 } else {
-  // otherwise, set the value to the current time
-  $_SESSION['last_activity'] = $now;
+	// otherwise, set the value to the current time
+	$_SESSION['last_activity'] = $now;
 }
 
 /// Because we don't care about notices
@@ -36,8 +36,9 @@ if(function_exists("error_reporting")){
 	 error_reporting( E_ERROR | E_WARNING);
 }
 function myErrorHandler($errno, $errstr, $errfile, $errline) {
-	//~ echo "<b>My ERROR</b> [$errno] $errstr<br />\n";
-        //~ echo "  Fatal error on line $errline in file $errfile <br/>\n";
+	echo "<div style='position: relative; bottom: 0px;width: 100%' class='label-danger'>
+			<span class='label'><b>My ERROR</b> [$errno] $errstr - Fatal error on line $errline in file $errfile</span>\n
+		</div>";
 }
 set_error_handler("myErrorHandler");
 
@@ -73,8 +74,6 @@ if (!get_magic_quotes_gpc()){
 	$_COOKIE = protect_user_send_var($_COOKIE);
 	$_GET = protect_user_send_var($_GET);
 }
-
-$GLOBALS['madate'];
 
 if (isset($_SERVER['CONTENT_TYPE'])) {
 	if(preg_match("/application\/json/",$_SERVER['CONTENT_TYPE'])){ new API();}

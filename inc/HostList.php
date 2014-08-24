@@ -1,16 +1,10 @@
 <?php
 class HostList {
 
-	private $moref;
-	private $order;
-	private $desc;
 	private $style;
 	private $MySQL;
 
-	function __construct($moref,$order = "1",$desc = "desc") {
-		$this->moref = $moref;
-		$this->order = $order;
-		$this->desc = $desc;
+	function __construct() {
 		$this->style = new Style();
 		$this->MySQL = new SGBD();
 	}
@@ -25,7 +19,7 @@ class HostList {
 			count(vm_moref) as "VM",
 			cpu_total as "Total CPU (Mhz)",
 			mem_total as "Total Memory (Mo)" 
-			FROM ClustersAndHostsAndGuests WHERE date="'.$_SESSION['madate'].'" group by hostname order by hostname';
+			FROM ClustersAndHostsAndGuests WHERE date="'.Settings::$timestamp.'" group by hostname order by hostname';
 		$Resultats = $this->MySQL->TabResSQL($SQL);		
 		$this->style->Tableau($Resultats,"hostlist-stats","Hosts");
 		echo "</div>";	

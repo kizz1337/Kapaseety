@@ -1,14 +1,10 @@
 <?php
 class Dashboard {
 
-	private $order;
-	private $desc;
 	private $style;
 	private $MySQL;
 
-	function __construct($order = "1",$desc = "desc") {
-		$this->order = $order;
-		$this->desc = $desc;
+	function __construct() {
 		$this->style = new Style();
 		$this->MySQL = new SGBD();
 	}
@@ -34,7 +30,7 @@ class Dashboard {
 			round(cluster_cpu_realcapacity/1000) as "Real capacity (Ghz)" ,			
 			round(cluster_cpu_usage/1000) as "CPU Usage (Ghz)"		
 			from data_clusters
-			where cluster_date ="'.$_SESSION['madate'].'"
+			where cluster_date ="'.Settings::$timestamp.'"
 			group by cluster_moref
 			order by clustername';
 		$Resulats = $this->MySQL->TabResSQL($SQL);
