@@ -18,7 +18,7 @@ class ClusterDetail {
 			count(vmname) as vms_num,
 			sum(vm_mem_total) as mem_total,
 			sum(vm_cpu_num) as vcpu_total 
-			FROM ClustersAndHostsAndGuests WHERE cluster_date="'.Settings::$timestamp.'" and  cluster_moref="'.$this->moref.'"';
+			FROM clustersandhostsandguests WHERE cluster_date="'.Settings::$timestamp.'" and  cluster_moref="'.$this->moref.'"';
 		$Rslt = $this->MySQL->TabResSQL($SQL);
 
 		echo "<div class='row'>
@@ -40,7 +40,7 @@ class ClusterDetail {
 				echo "<div class='panel panel-yellow-bodytab vmlist-stats'>";
 				echo "<div class='panel-body'>";
 				$SQL='SELECT vm_moref,vmname,vm_cpu_usage,vm_mem_usage 
-				FROM ClustersAndHostsAndGuests WHERE vm_date="'.Settings::$timestamp.'" and  cluster_moref="'.$this->moref.'" order by vmname';
+				FROM clustersandhostsandguests WHERE vm_date="'.Settings::$timestamp.'" and  cluster_moref="'.$this->moref.'" order by vmname';
 				$RsltVM = $this->MySQL->TabResSQL($SQL);
 				foreach ($RsltVM as $value) {
 					echo "<button class='btn btn-warning btn-circle' style='margin-left:2px' data-toggle='tooltip' data-placement='top' data-moref='".$value['vm_moref']."' title='Name :".$value['vmname']."\nCPU: ".$value['vm_cpu_usage']."Mhz\nRAM: ".$value['vm_mem_usage']."Mo'><i class='fa fa-laptop'></i></button>";
@@ -56,13 +56,13 @@ class ClusterDetail {
 		echo "<div class='row'>";
 			echo "<div class='col-lg-12'>"; //Host  Buttons List
 				$SQL='SELECT count(hostname) as hosts_num 
-					FROM ClustersAndHosts where cluster_date="'.Settings::$timestamp.'" and moref_cluster="'.$this->moref.'"';
+					FROM clustersandhosts where cluster_date="'.Settings::$timestamp.'" and moref_cluster="'.$this->moref.'"';
 				$Rslt = $this->MySQL->TabResSQL($SQL);
 				echo "<div class='panel-primary-titletab'>Hosts <b>".$Rslt[0]['hosts_num']."</b></div>";		
 				echo "<div class='panel panel-primary-bodytab hostlist-stats'>";
 				echo "<div class='panel-body'>";
 				$SQL='SELECT moref,hostname,cpu_usage,mem_usage 
-					FROM ClustersAndHosts where cluster_date="'.Settings::$timestamp.'" and moref_cluster="'.$this->moref.'" order by hostname';
+					FROM clustersandhosts where cluster_date="'.Settings::$timestamp.'" and moref_cluster="'.$this->moref.'" order by hostname';
 				$Rslt = $this->MySQL->TabResSQL($SQL);
 				foreach ($Rslt as $value) {
 				echo "<button class='btn btn-primary btn-circle' style='margin-left:2px' data-toggle='tooltip' data-placement='top' data-moref='".$value['moref']."' title='Name :".$value['hostname']."\nCPU: ".$value['cpu_usage']."Mhz\nRAM: ".$value['mem_usage']."Mo'><i class='fa fa-building'></i></button>";
@@ -98,6 +98,16 @@ class ClusterDetail {
 		echo "<div class='row'>"; //VM Historic
 		$this->style->Graph('graph-nombrevm-hist','col-lg-12');
 		echo "</div>";
+		echo "<div class='row'>"; // VM Top Max
+		$SQL='SELECT 
+			vm_moref,
+			vmname as "VM",
+			vm_mem_usage as "Memory Usage" ,
+			vm_cpu_usage as "CPU Usage"
+			FROM clustersandhostsandguests WHERE cluster_date="'.Settings::$timestamp.'" and moref_cluster="'.$this->moref.'" order by vm_mem_usage desc limit 10';
+		$Resultats = $this->MySQL->TabResSQL($SQL);
+		$this->style->Tableau($Resultats,"vmlist-stats","TOP 10 Max Memory Usage",false,"table-simple");
+		echo "</div>";		
 		echo "<div class='row'>"; // Hypervisor Table
 		$SQL='SELECT 
 			moref,
@@ -110,22 +120,22 @@ class ClusterDetail {
 		$Resultats = $this->MySQL->TabResSQL($SQL);
 		$this->style->Tableau($Resultats,"hostlist-stats",null,false,"table-simple");
 		echo "</div>";
-		echo "<div class='row'>"; //Statics Table
-		$SQL='SELECT 	
-			cluster_date,
-			cluster_date as "Date",
-			cluster_vms_total as "VM",
-			cluster_hosts_total as "Hosts",
-			cluster_mem_total as "Total memory (Mo)" ,
-			sum(vm_mem_total) as "VM Total memory",
-			sum(vm_mem_usage) as "VM Usage memory",
-			cluster_cpu_total as "Total cpu (Mhz)" , 
-			sum(vm_cpu_total)  as "VM Total cpu",
-			sum(vm_cpu_usage) as "VM Usage cpu"
-			FROM ClustersAndHostsAndGuests WHERE cluster_moref="'.$this->moref.'" group by cluster_date order by cluster_date';
-		$Resultats = $this->MySQL->TabResSQL($SQL);
-		$this->style->Tableau($Resultats,"datelist-stats");
-		echo "</div>";	
+		//~ echo "<div class='row'>"; //Statics Table
+		//~ $SQL='SELECT 	
+			//~ cluster_date,
+			//~ cluster_date as "Date",
+			//~ cluster_vms_total as "VM",
+			//~ cluster_hosts_total as "Hosts",
+			//~ cluster_mem_total as "Total memory (Mo)" ,
+			//~ sum(vm_mem_total) as "VM Total memory",
+			//~ sum(vm_mem_usage) as "VM Usage memory",
+			//~ cluster_cpu_total as "Total cpu (Mhz)" , 
+			//~ sum(vm_cpu_total)  as "VM Total cpu",
+			//~ sum(vm_cpu_usage) as "VM Usage cpu"
+			//~ FROM clustersandhostsandguests WHERE cluster_moref="'.$this->moref.'" group by cluster_date order by cluster_date desc';
+		//~ $Resultats = $this->MySQL->TabResSQL($SQL);
+		//~ $this->style->Tableau($Resultats,"datelist-stats");
+		//~ echo "</div>";	
 	}
 }
 ?>

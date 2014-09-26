@@ -23,7 +23,7 @@ class VmList {
 			vm_guest_os as "OS",
 			hostname as "Host",
 			clustername as "Cluster" 
-			FROM ClustersAndHostsAndGuests WHERE vm_date="'.Settings::$timestamp.'" order by vmname';			
+			FROM clustersandhostsandguests WHERE vm_date="'.Settings::$timestamp.'" order by vmname';			
 		$Resultats =  $this->MySQL->TabResSQL($SQL);
 		$this->style->Tableau($Resultats,"vmlist-stats");
 		echo "</div>";	

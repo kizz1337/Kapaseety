@@ -49,7 +49,7 @@ class VmDetail {
 			vm_cpu_total as "Total CPU (Mhz)",
 			vm_mem_usage as "Usage Memory (Mo)",
 			vm_mem_total as "Total Memory (Mo)"
-			FROM ClustersAndHostsAndGuests WHERE vm_moref="'.$this->moref.'" order by vm_date';
+			FROM clustersandhostsandguests WHERE vm_moref="'.$this->moref.'" order by vm_date desc';
 		$Resulats = $this->MySQL->TabResSQL($SQL);
 		$this->style->Tableau($Resulats,"datelist-stats");
 		echo "</div>";

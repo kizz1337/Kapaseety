@@ -16,13 +16,14 @@
 
 var graphOptions = {  
 	chart: {borderRadius:5,borderwidth:0,shadow: false}, 
+	exporting: {enabled: true},
 	credits: {enabled: false}
 	};
 
 function init() {
 
-	$('.table-paging').dataTable({jQueryUI:true,searching:false,scrollX: true,scrollCollapse: true})
-	$('.table-simple').dataTable({jQueryUI:true,searching:false,scrollX: true,scrollCollapse: true,paging: false,info:false})
+	$('.table-paging').dataTable({jQueryUI:true,searching:false,scrollX: true,scrollCollapse: true,"order": []})
+	$('.table-simple').dataTable({jQueryUI:true,searching:false,scrollX: true,scrollCollapse: true,paging: false,info:false,"order": []})
 	$('.table-paging,table-simple').on( 'draw.dt',links);
 	links();
 }
@@ -36,8 +37,8 @@ function links(){
 	$('#topmenu .item').unbind();
 	$('#topmenu .item').click(function(event){
 		type = $(this).attr('data-href');
-		url = '/?m='+type+'&moref='+$(this).attr('data-moref')+'&madate='+$('#madate').val();
-					event.preventDefault();
+		url = '/?m='+type+'&moref='+$(this).attr('data-moref')+'&madate='+encodeURI($('#madate').val());
+		event.preventDefault();
 
 		//~ update_url(url);
 		if ($('#side-menu').find(this).length ==1) {
@@ -201,9 +202,9 @@ function loadchart_vm() {
 	
 	//Graph Consommation
         $('#graph-consommation').highcharts({
-            chart: {type: 'spline',borderRadius:5,borderwidth:0,shadow: true,marginLeft:100,marginRight:150}, title: {text: 'Consommation moyenne par jour'}, subtitle: {text: 'un point de mesure par jour'},
+            chart: {type: 'spline',zoomType: 'x',borderRadius:5,borderwidth:0,shadow: true,marginLeft:100,marginRight:150}, title: {text: 'Consommation moyenne par jour'}, subtitle: {text: 'un point de mesure par jour'},
 	    credits: {enabled: false},
-            xAxis: {type:'category',title: {text: 'Date'}, tickmarkPlacement: 'on', title: {enabled: false}},
+            xAxis: {type:'datetime',title: {text: 'Date'}, tickmarkPlacement: 'on', title: {enabled: false}},
             yAxis: [
 		{labels: {format: '{value} Mhz',style: {color: Highcharts.getOptions().colors[0]}},title: {text: 'CPU Usage (Mhz)', style: {color: Highcharts.getOptions().colors[0]}}, min: 0},
 		{labels: {format: '{value} Mo',style: {color: Highcharts.getOptions().colors[1]}}, title: {text: 'Mem Usage (Mo)', style: {color: Highcharts.getOptions().colors[1]}}, min: 0,opposite: true}
@@ -211,10 +212,10 @@ function loadchart_vm() {
             tooltip: {shared:true},
 	   series: [{name: 'CPU',data:[0]}, {name: 'RAM',data:[0],yAxis: 1}]
         });
-	var js = JSON.stringify({"jsonrpc":"2.0","method":"WS_Stats.vm_hist","params":[{"moref":moref,"select":"vm_date,vm_cpu_usage"}],"id":"1"});
+	var js = JSON.stringify({"jsonrpc":"2.0","method":"WS_Stats.vm_hist","params":[{"moref":moref,"select":"unix_timestamp(vm_date)*1000,vm_cpu_usage"}],"id":"1"});
 		$.ajax({url:'',data:js,type:'POST',dataType:"json",contentType: "application/json"})
 		.done(function(data){$('#graph-consommation').highcharts().series[0].setData(data.result)});		
-	var js = JSON.stringify({"jsonrpc":"2.0","method":"WS_Stats.vm_hist","params":[{"moref":moref,"select":"vm_date,vm_mem_usage"}],"id":"1"});
+	var js = JSON.stringify({"jsonrpc":"2.0","method":"WS_Stats.vm_hist","params":[{"moref":moref,"select":"unix_timestamp(vm_date)*1000,vm_mem_usage"}],"id":"1"});
 		$.ajax({url:'',data:js,type:'POST',dataType:"json",contentType: "application/json"})
 		.done(function(data){$('#graph-consommation').highcharts().series[1].setData(data.result)});
 }
@@ -222,6 +223,24 @@ function loadchart_vm() {
 function loadchart_cluster(){
 	
 	moref = $('#moref').html();
+	
+	//Graph Left VM			
+	$('#graph-vm-left').highcharts(Highcharts.merge(gaugeOptions,{
+	chart:{shadow:true},
+        yAxis: { min: 0, max: 50, title: { text: 'VM Restante '}},
+	title: {text:'Cluster Capacity'},
+	series: [{	name: 'Qt', 
+			data: [0],
+			dataLabels: {format: '<div class="dataLabels" style="text-align:center"><span style="font-size:12px">{y} </span><span style="font-size:12px">Machines</span></div>'}
+		   }]
+	}));
+	var js = JSON.stringify({"jsonrpc":"2.0","method":"WS_Stats.cluster_serie","params":[{"moref":moref,"select":"DISTINCT LEAST(cluster_vmcpu_left,cluster_vmmem_left) as cluster_vm_left,cluster_vms_total as vm_num"}],"id":"1"});
+		$.ajax({url:'',data:js,type:'POST',dataType:"json",contentType: "application/json"})
+		.done(function(data){
+			$('#graph-vm-left').highcharts().yAxis[0].axisTitle.attr({text:'VM Restante :'+data.result[0]+' (moy. '+vm_cpu_average+'Mhz - '+vm_mem_average+'Mo)'});
+			$('#graph-vm-left').highcharts().yAxis[0].setExtremes(0,(data.result[0]+data.result[1]));
+			$('#graph-vm-left').highcharts().series[0].setData([data.result[1]]);
+			});		
 	
 	//Graph Ratio CPU
 	$('#graph-ratio-cpu').highcharts(Highcharts.merge(gaugeOptionsSmall,{
@@ -278,24 +297,6 @@ function loadchart_cluster(){
 			$('#graph-disk').highcharts().yAxis[0].setExtremes(0,data.result[8]);
 			$('#graph-disk').highcharts().series[0].setData(([data.result[7]]));			
 		});		
-		
-	//Graph Left VM			
-	$('#graph-vm-left').highcharts(Highcharts.merge(gaugeOptions,{
-	chart:{shadow:true},
-        yAxis: { min: 0, max: 50, title: { text: 'VM Restante '}},
-	title: {text:'Cluster Capacity'},
-	series: [{	name: 'Qt', 
-			data: [0],
-			dataLabels: {format: '<div class="dataLabels" style="text-align:center"><span style="font-size:12px">{y} </span><span style="font-size:12px">Machines</span></div>'}
-		   }]
-	}));
-	var js = JSON.stringify({"jsonrpc":"2.0","method":"WS_Stats.clusters_hosts_vms","params":[{"moref":moref,"select":"DISTINCT LEAST(cluster_vmcpu_left,cluster_vmmem_left) as cluster_vm_left,count(vm_moref) as vm_num"}],"id":"1"});
-		$.ajax({url:'',data:js,type:'POST',dataType:"json",contentType: "application/json"})
-		.done(function(data){
-			$('#graph-vm-left').highcharts().yAxis[0].axisTitle.attr({text:'VM Restante :'+data.result[0]+' (moy. '+vm_cpu_average+'Mhz - '+vm_mem_average+'Mo)'});
-			$('#graph-vm-left').highcharts().yAxis[0].setExtremes(0,(data.result[0]+data.result[1]));
-			$('#graph-vm-left').highcharts().series[0].setData([data.result[1]]);
-			});		
 			
 	//Graph Consommation
 	$('#graph-consommation').highcharts(Highcharts.merge(graphOptions,{
@@ -314,8 +315,8 @@ function loadchart_cluster(){
 
 	// Graph Historic Consommation 
         $('#graph-consommation-hist').highcharts(Highcharts.merge(graphOptions,{
-            chart: {type: 'spline',marginLeft:150,marginRight:150}, title: {text: 'Consommation moyenne des vms par jour'}, subtitle: {text: 'un point de mesure par jour'},
-            xAxis: {type:'category',title: {text: 'Date'}, tickmarkPlacement: 'on', title: {enabled: false}},
+            chart: {type: 'spline',zoomType: 'x',marginLeft:150,marginRight:150}, title: {text: 'Consommation moyenne des vms par jour'}, subtitle: {text: 'un point de mesure par jour'},
+            xAxis: {type:'datetime',title: {text: 'Date'}, tickmarkPlacement: 'on', title: {enabled: false},labels:{rotation: -45}},
             yAxis: [
 		{labels: {format: '{value} Mhz',style: {color: Highcharts.getOptions().colors[0]}},title: {text: 'CPU Usage (Mhz)', style: {color: Highcharts.getOptions().colors[0]}}, min: 0},
 		{labels: {format: '{value} Mo',style: {color: Highcharts.getOptions().colors[1]}}, title: {text: 'Mem Usage (Mo)', style: {color: Highcharts.getOptions().colors[1]}}, min: 0,opposite: true}
@@ -323,29 +324,31 @@ function loadchart_cluster(){
             tooltip: {shared:true},
 	   series: [{name: 'CPU',data:[0]}, {name: 'RAM',data:[0],yAxis: 1}]
         }));
-	var js = JSON.stringify({"jsonrpc":"2.0","method":"WS_Stats.cluster_hist","params":[{"moref":moref,"select":"cluster_date,cluster_vmcpu_average"}],"id":"1"});
+	var js = JSON.stringify({"jsonrpc":"2.0","method":"WS_Stats.cluster_hist","params":[{"moref":moref,"select":"unix_timestamp(cluster_date)*1000,cluster_vmcpu_average"}],"id":"1"});
 		$.ajax({url:'',data:js,type:'POST',dataType:"json",contentType: "application/json"})
 		.done(function(data){$('#graph-consommation-hist').highcharts().series[0].setData(data.result)});		
-	var js = JSON.stringify({"jsonrpc":"2.0","method":"WS_Stats.cluster_hist","params":[{"moref":moref,"select":"cluster_date,cluster_vmmem_average"}],"id":"1"});
+	var js = JSON.stringify({"jsonrpc":"2.0","method":"WS_Stats.cluster_hist","params":[{"moref":moref,"select":"unix_timestamp(cluster_date)*1000,cluster_vmmem_average"}],"id":"1"});
 		$.ajax({url:'',data:js,type:'POST',dataType:"json",contentType: "application/json"})
 		.done(function(data){$('#graph-consommation-hist').highcharts().series[1].setData(data.result)});	
 		
 	// Graph Historic VM Numbers
         $('#graph-nombrevm-hist').highcharts(Highcharts.merge(graphOptions,{
-            chart: {type: 'area',marginLeft:100,marginRight:50},title: {text: 'Nombre de machines virtuelles'},subtitle: {text: 'un point de mesure par jour'},
+            chart: {type: 'area',zoomType: 'x',marginLeft:100,marginRight:50},title: {text: 'Nombre de machines virtuelles'},subtitle: {text: 'un point de mesure par jour'},
 	    legend: {layout: 'vertical',align: 'left',verticalAlign: 'top',x: 100,y: 50,floating: true,borderWidth: 1,backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'},
-            xAxis: {type:'category',title: {text: 'Date'}, tickmarkPlacement: 'on', title: {enabled: false}},
+            xAxis: {type:'datetime',zoomType: 'x',title: {text: 'Date'}, tickmarkPlacement: 'on', title: {enabled: false}},
             yAxis: {title: {text: 'Unit'}},
             tooltip: {shared: true,valueSuffix: ' Unit'},
             plotOptions: {area: {stacking: 'normal',lineColor: '#666666',lineWidth: 1,marker: {lineWidth: 1,lineColor: '#666666'}}},
             series: [{name: 'VM Restante',data:[0]}, {name: 'VM Totale',data:[0]}]
         }));
-	var js = JSON.stringify({"jsonrpc":"2.0","method":"WS_Stats.cluster_hist","params":[{"moref":moref,"select":"cluster_date,cluster_vmmem_left"}],"id":"1"});
+	var js = JSON.stringify({"jsonrpc":"2.0","method":"WS_Stats.cluster_hist","params":[{"moref":moref,"select":"unix_timestamp(cluster_date)*1000,cluster_vmmem_left"}],"id":"1"});
 		$.ajax({url:'',data:js,type:'POST',dataType:"json",contentType: "application/json"})
 		.done(function(data){$('#graph-nombrevm-hist').highcharts().series[0].setData(data.result)});
-	var js = JSON.stringify({"jsonrpc":"2.0","method":"WS_Stats.cluster_hist","params":[{"moref":moref,"select":"cluster_date,cluster_vms_total"}],"id":"1"});
+	var js = JSON.stringify({"jsonrpc":"2.0","method":"WS_Stats.cluster_hist","params":[{"moref":moref,"select":"unix_timestamp(cluster_date)*1000,cluster_vms_total"}],"id":"1"});
 		$.ajax({url:'',data:js,type:'POST',dataType:"json",contentType: "application/json"})
-		.done(function(data){$('#graph-nombrevm-hist').highcharts().series[1].setData(data.result)});			
+		.done(function(data){$('#graph-nombrevm-hist').highcharts().series[1].setData(data.result)});		
+
+	
 }
 
 function loadchart_host(){
@@ -397,21 +400,21 @@ function loadchart_host(){
 	
 	// Graph Consommation
         $('#graph-consommation').highcharts({
-            chart: {type: 'spline',borderRadius:5,borderwidth:0,shadow: true,marginLeft:100,marginRight:50}, title: {text: 'Consommation moyenne par jour'}, subtitle: {text: 'un point de mesure par jour'},
+            chart: {type: 'spline',zoomType: 'x',borderRadius:5,borderwidth:0,shadow: true,marginLeft:100,marginRight:50}, title: {text: 'Consommation moyenne par jour'}, subtitle: {text: 'un point de mesure par jour'},
            credits: {enabled: false},
-            xAxis: {type:'category',title: {text: 'Date'}, tickmarkPlacement: 'on', title: {enabled: false}},
+            xAxis: {type:'datetime',title: {text: 'Date'}, tickmarkPlacement: 'on', title: {enabled: false}},
             yAxis: {title: {text: 'cpu usage (%)'}, min: 0},
             tooltip: {headerFormat: '<b>{series.name}</b><br>',pointFormat: '{point.x:%e. %b}: {point.y:.2f} %'},
             series: [{name: 'CPU'}, { name: 'Memoire'}, {name: 'Disque'}]
         });
 
-	var js = JSON.stringify({"jsonrpc":"2.0","method":"WS_Stats.host_hist","params":[{"moref":moref,"select":"date,round(cpu_usage*100/cpu_total)"}],"id":"1"});
+	var js = JSON.stringify({"jsonrpc":"2.0","method":"WS_Stats.host_hist","params":[{"moref":moref,"select":"unix_timestamp(date)*1000,round(cpu_usage*100/cpu_total)"}],"id":"1"});
 		$.ajax({url:'',data:js,type:'POST',dataType:"json",contentType: "application/json"})
 		.done(function(data){$('#graph-consommation').highcharts().series[0].setData(data.result)});
-	var js = JSON.stringify({"jsonrpc":"2.0","method":"WS_Stats.host_hist","params":[{"moref":moref,"select":"date,round(mem_usage*100/(mem_total*1000))"}],"id":"1"});
+	var js = JSON.stringify({"jsonrpc":"2.0","method":"WS_Stats.host_hist","params":[{"moref":moref,"select":"unix_timestamp(date)*1000,round(mem_usage*100/mem_total)"}],"id":"1"});
 		$.ajax({url:'',data:js,type:'POST',dataType:"json",contentType: "application/json"})
 		.done(function(data){$('#graph-consommation').highcharts().series[1].setData(data.result)});
-	var js = JSON.stringify({"jsonrpc":"2.0","method":"WS_Stats.host_hist","params":[{"moref":moref,"select":"date,round(datastore_used*100/datastore_total)"}],"id":"1"});
+	var js = JSON.stringify({"jsonrpc":"2.0","method":"WS_Stats.host_hist","params":[{"moref":moref,"select":"unix_timestamp(date)*1000,round(datastore_used*100/datastore_total)"}],"id":"1"});
 		$.ajax({url:'',data:js,type:'POST',dataType:"json",contentType: "application/json"})
 		.done(function(data){$('#graph-consommation').highcharts().series[2].setData(data.result)});
 }

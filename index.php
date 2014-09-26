@@ -3,7 +3,7 @@
  * This file implements the index.
  * 
  * @author    Cédric Levasseur <cedric.levasseur@ipocus.net>
- * @copyright 2014Cédric Levasseur
+ * @copyright 2014 Cédric Levasseur
  * @license   http://www.gnu.org/licenses/
  * @link      http://github.com/cyr-ius/Kapaseety
  */

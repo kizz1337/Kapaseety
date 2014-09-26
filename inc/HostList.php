@@ -19,7 +19,7 @@ class HostList {
 			count(vm_moref) as "VM",
 			cpu_total as "Total CPU (Mhz)",
 			mem_total as "Total Memory (Mo)" 
-			FROM ClustersAndHostsAndGuests WHERE date="'.Settings::$timestamp.'" group by hostname order by hostname';
+			FROM clustersandhostsandguests WHERE date="'.Settings::$timestamp.'" group by hostname order by hostname';
 		$Resultats = $this->MySQL->TabResSQL($SQL);		
 		$this->style->Tableau($Resultats,"hostlist-stats","Hosts");
 		echo "</div>";	

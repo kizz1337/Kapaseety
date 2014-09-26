@@ -6,7 +6,8 @@ abstract class Header implements HTMLObject
 		echo "<html lang='fr'>\n";
 		echo "<head>\n";
 		echo "<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>\n";
-              echo "<meta name='viewport' content='width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;'/>\n";
+                echo "<meta name='viewport' content='width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;'/>\n";
+		echo "<meta http-equiv='X-UA-Compatible' content='IE=9' />";
 		echo "<title>".Settings::$name."</title>\n";
 		echo "<link rel='icon' type='image/ico' href='".Settings::$icon_path."'>\n";
 		/// CSS

@@ -40,7 +40,9 @@ class Menubar implements HTMLObject
                 </div>
             </form>
             <ul class="nav navbar-top-links navbar-right">';
-                $SQL = "select DISTINCT LEAST(cluster_vmcpu_left,cluster_vmmem_left) as vm_left,clustername,cluster_moref from data_clusters where  cluster_date='".Settings::$timestamp." and (cluster_vmmem_left < 10 or cluster_vmcpu_left <10)' order by cluster_date desc";
+		$SQL = "SELECT DISTINCT LEAST( cluster_vmcpu_left, cluster_vmmem_left ) AS vm_left, clustername, cluster_moref
+				FROM data_clusters
+				WHERE cluster_date = '".Settings::$timestamp."' AND (cluster_vmmem_left <10 OR cluster_vmcpu_left <10)";
 		$AlertRslt = $this->MySQL->TabResSQL($SQL);
                 if  (count($AlertRslt) > 0) {
     echo '

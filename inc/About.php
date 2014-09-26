@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file implements the About page.
+ * 
+ * @author    Cédric Levasseur <cedric.levasseur@ipocus.net>
+ * @copyright 2014 Cédric Levasseur
+ * @license   http://www.gnu.org/licenses/
+ * @link      http://github.com/cyr-ius/Kapaseety
+ */
 class About {
 	function __contruct(){
 
