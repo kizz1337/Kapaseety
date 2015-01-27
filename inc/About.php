@@ -2,8 +2,8 @@
 /**
  * This file implements the About page.
  * 
- * @author    Cédric Levasseur <cedric.levasseur@ipocus.net>
- * @copyright 2014 Cédric Levasseur
+ * @author    CÃ©dric Levasseur <cedric.levasseur@ipocus.net>
+ * @copyright 2014 CÃ©dric Levasseur
  * @license   http://www.gnu.org/licenses/
  * @link      http://github.com/cyr-ius/Kapaseety
  */
@@ -22,7 +22,7 @@ class About {
 						<h5 id="myLargeModalLabel" class="modal-title">KapaSeeTy v1.2 License GPL V3 -  C.Levasseur, August 2014</h5>
 						</div>
 						<div class="modal-body">
-						<iframe src="/LICENSE" height="300px" width="571px"></iframe> 
+						<iframe src="LICENSE" height="300px" width="571px"></iframe> 
 						</div>
 					</div>
 				</div>

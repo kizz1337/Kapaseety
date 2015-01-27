@@ -7,7 +7,7 @@ class Settings
 	static public  $sgbd_password;
 	static public  $sgbd_database;
 	static public  $name = "KapaSeeTy";
-	static public  $logo_path="/img/kapaseety.png";
+	static public  $logo_path="img/kapaseety.png";
 	static public $icon_path;
 	static public $rp_ratio;
 	static public $rp_upper_limit =80000;

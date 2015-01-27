@@ -8,6 +8,7 @@ private
 	
 	function __construct(){
 	      $this->Lien=mysql_connect(Settings::$sgbd_server, Settings::$sgbd_user,  Settings::$sgbd_password);
+	      mysql_set_charset('utf8',$this->Lien);
 	      if(!$this->Lien)
 		throw new exception('Erreur de connexion au serveur MySql!!!');
 	      $Base = mysql_select_db(Settings::$sgbd_database,$this->Lien);
