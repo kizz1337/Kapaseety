@@ -4,7 +4,7 @@
 # You can change the following defaults by altering the below settings:
 
 # Start of Settings
-#VMWare Serveur
+#VMWare Serveur, you can use multiple vcenter like that "srv1","srv2"...
 $VIServer = "VCENTER_NAME"
 #SQL Serveur
 $SQLServer = "MYSQL_SERVERNAME"
@@ -362,5 +362,5 @@ $Fullvm | Get-CollectDataVM
 Write-Host "Collect Data Resource Pool"
 $Respoolviews | Get-CollectDataResPool
 Disconnect-MySQL($conn)
-Disconnect-VIServer -Confirm:$false
+Disconnect-VIServer * -Confirm:$false
 Write-Host "Collect Finish"
