@@ -34,21 +34,7 @@ class ClusterDetail {
 					echo "</div>";							
 				echo "</div>";			
 		$this->style->Graph('graph-ha','col-lg-4',220);	//HA	
-		echo "</div>";				
-		echo "<div class='row'>";//VM  Buttons List
-				echo "<div class='panel-yellow-titletab'>Virtual machines <b>".$Rslt[0]['vms_num']."</b></div>";
-				echo "<div class='panel panel-yellow-bodytab vmlist-stats'>";
-				echo "<div class='panel-body'>";
-				$SQL='SELECT vm_moref,vmname,vm_cpu_usage,vm_mem_usage 
-				FROM clustersandhostsandguests WHERE vm_date="'.Settings::$timestamp.'" and  cluster_moref="'.$this->moref.'" order by vmname';
-				$RsltVM = $this->MySQL->TabResSQL($SQL);
-				foreach ($RsltVM as $value) {
-					echo "<button class='btn btn-warning btn-circle' style='margin-left:2px' data-toggle='tooltip' data-placement='top' data-moref='".$value['vm_moref']."' title='Name :".$value['vmname']."\nCPU: ".$value['vm_cpu_usage']."Mhz\nRAM: ".$value['vm_mem_usage']."Mo'><i class='fa fa-laptop'></i></button>";
-				}
-				echo "</div></div>";
-		echo "</div>";		
-		echo "<div class='row'>";
-		echo "</div>";			
+		echo "</div>";	
 		echo "<div class='row'>";
 		$this->style->Graph('graph-consommation','col-lg-8'); //graph Consumed
 		$this->style->Graph('graph-disk','col-lg-4',220); //graph Disk
@@ -69,6 +55,23 @@ class ClusterDetail {
 				}
 				echo "</div></div>";
 			echo "</div>";			
+		echo "</div>";
+		echo "<div class='row'>";//VM  Buttons List
+			echo "<div class='col-lg-12'>"; //Host  Buttons List
+				$SQL='SELECT count(vmname) as vms_num 
+					FROM clustersandhostsandguests WHERE cluster_date="'.Settings::$timestamp.'" and  cluster_moref="'.$this->moref.'"';
+				$Rslt = $this->MySQL->TabResSQL($SQL);
+				echo "<div class='panel-yellow-titletab'>Virtual machines <b>".$Rslt[0]['vms_num']."</b></div>";
+				echo "<div class='panel panel-yellow-bodytab vmlist-stats'>";
+				echo "<div class='panel-body'>";
+				$SQL='SELECT vm_moref,vmname,vm_cpu_usage,vm_mem_usage 
+				FROM clustersandhostsandguests WHERE vm_date="'.Settings::$timestamp.'" and  cluster_moref="'.$this->moref.'" order by vmname';
+				$RsltVM = $this->MySQL->TabResSQL($SQL);
+				foreach ($RsltVM as $value) {
+					echo "<button class='btn btn-warning btn-circle' style='margin-left:2px' data-toggle='tooltip' data-placement='top' data-moref='".$value['vm_moref']."' title='Name :".$value['vmname']."\nCPU: ".$value['vm_cpu_usage']."Mhz\nRAM: ".$value['vm_mem_usage']."Mo'><i class='fa fa-laptop'></i></button>";
+				}
+				echo "</div></div>";
+			echo "</div>";
 		echo "</div>";
 		echo "<div class='row'>";
 			echo "<div class='col-lg-8'>"; //Ressource Pool
